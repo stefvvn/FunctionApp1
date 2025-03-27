@@ -11,32 +11,65 @@ const PersonForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const personData = [
-            {
-                FirstName: firstName,
-                LastName: lastName,
-                Email: email,
-                PhoneNumber: phoneNumber,
-                Address: address,
-                BirthDate: birthDate,
-            },
-        ];
+        
+        const personData = {
+            FirstName: firstName,
+            LastName: lastName,
+            Email: email,
+            PhoneNumber: phoneNumber,
+            Address: address,
+            BirthDate: birthDate,
+        };
 
         try {
-            const response = await fetch('http://localhost:7285/api/PersonInsert', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(personData),
+            const getResponse = await fetch(`http://localhost:7285/api/person/search?query=${email}`);
+            
+            if (getResponse.ok) {
+                const patchResponse = await fetch('http://localhost:7285/api/person', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(personData),
+                });
+
+                if (!patchResponse.ok) {
+                    throw new Error('Failed to update person');
+                }
+
+                setStatus('Person updated successfully!');
+            } else {
+                const putResponse = await fetch('http://localhost:7285/api/PersonInsert', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify([personData]),
+                });
+
+                if (!putResponse.ok) {
+                    throw new Error('Failed to add person');
+                }
+
+                setStatus('Person added successfully!');
+            }
+        } catch (error) {
+            setStatus('Error: ' + error.message);
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            const deleteResponse = await fetch(`http://localhost:7285/api/person/${email}`, {
+                method: 'DELETE',
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to add person');
+            if (!deleteResponse.ok) {
+                throw new Error('Failed to delete person');
             }
 
-            const data = await response.text();
-            setStatus('Person added successfully!');
+            setStatus('Person deleted successfully!');
+            setEmail('');
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
@@ -44,8 +77,16 @@ const PersonForm = () => {
 
     return (
         <div>
-            <h2>Insert Person Data</h2>
+            <h2>Create Person/Update By Email</h2>
             <form onSubmit={handleSubmit}>
+            <div>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
                 <div>
                     <label>First Name:</label>
                     <input
@@ -60,14 +101,6 @@ const PersonForm = () => {
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <div>
@@ -95,6 +128,7 @@ const PersonForm = () => {
                     />
                 </div>
                 <button type="submit">Submit</button>
+                <button type="button" onClick={handleDelete}>Delete</button>
             </form>
             <p>{status}</p>
         </div>
