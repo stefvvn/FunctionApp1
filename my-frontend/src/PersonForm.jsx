@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './PersonForm.css'; // Import the CSS file for styling
 
 const PersonForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -76,61 +77,77 @@ const PersonForm = () => {
     };
 
     return (
-        <div>
-            <h2>Create Person/Update By Email</h2>
+        <div className="form-container">
+            <h2>Create or Update Person</h2>
             <form onSubmit={handleSubmit}>
-            <div>
+                <div className="form-field">
                     <label>Email:</label>
                     <input
+                        className="form-input"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>First Name:</label>
                     <input
+                        className="form-input"
                         type="text"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Last Name:</label>
                     <input
+                        className="form-input"
                         type="text"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Phone Number:</label>
                     <input
+                        className="form-input"
                         type="text"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Address:</label>
                     <input
+                        className="form-input"
                         type="text"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                     />
                 </div>
-                <div>
+                <div className="form-field">
                     <label>Birth Date:</label>
                     <input
+                        className="form-input"
                         type="date"
                         value={birthDate}
                         onChange={(e) => setBirthDate(e.target.value)}
                     />
                 </div>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={handleDelete}>Delete</button>
+                <div className="form-actions">
+                    <button className="action-button" type="submit">
+                        Submit
+                    </button>
+                    <button
+                        className="action-button delete-button"
+                        type="button"
+                        onClick={handleDelete}
+                    >
+                        Delete
+                    </button>
+                </div>
             </form>
-            <p>{status}</p>
+            {status && <p className="status-message">{status}</p>}
         </div>
     );
 };

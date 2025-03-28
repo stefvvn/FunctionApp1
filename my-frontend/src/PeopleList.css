@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  
+  h2 {
+    color: #333;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .action-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    margin: 5px 0px 0px 5px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .action-button:disabled {
+    background-color: #cccccc;
+  }
+  
+  .action-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  
+  .people-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .people-table th, .people-table td {
+    padding: 5px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .people-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .people-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .people-table tr:hover {
+    background-color: #e2e2e2;
+  }
+  
+  .delete-button {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .delete-button:hover {
+    background-color: #d9534f;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .export-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .select-dropdown {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+    width: 150px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .select-dropdown:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .select-dropdown:hover {
+    border-color: #007bff;
+  }
+  
+  .select-dropdown option {
+    padding: 10px;
+    background-color: white;
+    color: #333;
+  }
+  
+  .select-dropdown option:checked {
+    background-color: #007bff;
+    color: white;
+  }
+  
