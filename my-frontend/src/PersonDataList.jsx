@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
 const PeopleList = () => {
   const [people, setPeople] = useState([]);
@@ -12,7 +12,7 @@ const PeopleList = () => {
   const fetchPeople = async () => {
     setLoading(true);
     setError(null);
-
+ 
     try {
       const response = await fetch("http://localhost:7285/api/PersonGetList");
       if (!response.ok) {
@@ -27,6 +27,29 @@ const PeopleList = () => {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deletePeople = async () => {
+    setDeleting(true);
+    setError(null);
+
+    try {
+      const response = await fetch("http://localhost:7285/api/person/clearall", {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete data");
+      }
+
+      setPeople([]);
+      setSearchResults([]);
+      alert("People list deleted successfully!");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -47,29 +70,6 @@ const PeopleList = () => {
       setSearchResults((prevResults) => prevResults.filter((person) => person.email !== email));
 
       alert("Person deleted successfully!");
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  const deletePeople = async () => {
-    setDeleting(true);
-    setError(null);
-
-    try {
-      const response = await fetch("http://localhost:7285/api/person/clearall", {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete data");
-      }
-
-      setPeople([]);
-      setSearchResults([]);
-      alert("People list deleted successfully!");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -127,6 +127,10 @@ const PeopleList = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchPeople();
+  }, []);
 
   return (
     <div>
@@ -204,7 +208,7 @@ const PeopleList = () => {
           id="exportFormat"
           value={exportFormat}
           onChange={(e) => setExportFormat(e.target.value)}
-          className="select-dropdown" // Add the class here
+          className="select-dropdown"
         >
           <option value="json">JSON</option>
           <option value="csv">CSV</option>
