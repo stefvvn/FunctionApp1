@@ -78,6 +78,7 @@ const PersonForm = () => {
             setLastName('');
             setPhoneNumber('');
             setAddress('');
+            setBirthDate('');
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
