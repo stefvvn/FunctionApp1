@@ -260,6 +260,11 @@ namespace FunctionApp1
                 p.Email.Contains(query, StringComparison.OrdinalIgnoreCase)
             ).ToList();
 
+            if (searchResults.Count == 0)
+            {
+                return new NotFoundObjectResult("Person not found");
+            }
+
             return new OkObjectResult(searchResults);
         }
     }

@@ -21,10 +21,12 @@ const PersonForm = () => {
             Address: address,
             BirthDate: birthDate,
         };
-
+    
         try {
+            // Search for the person by email
             const getResponse = await fetch(`http://localhost:7285/api/person/search?query=${email}`);
             
+            // If the person is found (status 200), proceed with updating
             if (getResponse.ok) {
                 const patchResponse = await fetch('http://localhost:7285/api/person', {
                     method: 'PATCH',
@@ -33,31 +35,36 @@ const PersonForm = () => {
                     },
                     body: JSON.stringify(personData),
                 });
-
+    
                 if (!patchResponse.ok) {
                     throw new Error('Failed to update person');
                 }
-
+    
                 setStatus('Person updated successfully!');
-            } else {
+            } else if (getResponse.status === 404) {
+                // If the person is not found (status 404), proceed with creating the person
                 const putResponse = await fetch('http://localhost:7285/api/PersonInsert', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify([personData]),
+                    body: JSON.stringify([personData]), // Ensure it's an array if that's expected
                 });
-
+    
                 if (!putResponse.ok) {
                     throw new Error('Failed to add person');
                 }
-
+    
                 setStatus('Person added successfully!');
+            } else {
+                // Handle any unexpected status
+                throw new Error('Unexpected error during search');
             }
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
     };
+    
 
     const handleDelete = async () => {
         try {
