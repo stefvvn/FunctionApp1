@@ -23,10 +23,8 @@ const PersonForm = () => {
         };
     
         try {
-            // Search for the person by email
             const getResponse = await fetch(`http://localhost:7285/api/person/search?query=${email}`);
             
-            // If the person is found (status 200), proceed with updating
             if (getResponse.ok) {
                 const patchResponse = await fetch('http://localhost:7285/api/person', {
                     method: 'PATCH',
@@ -42,13 +40,12 @@ const PersonForm = () => {
     
                 setStatus('Person updated successfully!');
             } else if (getResponse.status === 404) {
-                // If the person is not found (status 404), proceed with creating the person
                 const putResponse = await fetch('http://localhost:7285/api/PersonInsert', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify([personData]), // Ensure it's an array if that's expected
+                    body: JSON.stringify([personData]),
                 });
     
                 if (!putResponse.ok) {
@@ -57,7 +54,6 @@ const PersonForm = () => {
     
                 setStatus('Person added successfully!');
             } else {
-                // Handle any unexpected status
                 throw new Error('Unexpected error during search');
             }
         } catch (error) {
@@ -78,6 +74,10 @@ const PersonForm = () => {
 
             setStatus('Person deleted successfully!');
             setEmail('');
+            setFirstName('');
+            setLastName('');
+            setPhoneNumber('');
+            setAddress('');
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
@@ -85,7 +85,7 @@ const PersonForm = () => {
 
     return (
         <div className="form-container">
-            <h2>Create or Update Person</h2>
+            <h2>Create/Update/Delete Person</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-field">
                     <label>Email:</label>
