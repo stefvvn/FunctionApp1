@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import './PersonForm.css';
+import {
+    PERSON_SEARCH_URL,
+    PERSON_PATCH_URL,
+    PERSON_INSERT_URL,
+    PERSON_DELETE_URL,
+} from './apiUrl';
 
 const PersonForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -23,10 +29,10 @@ const PersonForm = () => {
         };
     
         try {
-            const getResponse = await fetch(`http://localhost:7285/api/person/search?query=${email}`);
+            const getResponse = await fetch(`${PERSON_SEARCH_URL}${email}`);
             
             if (getResponse.ok) {
-                const patchResponse = await fetch('http://localhost:7285/api/person', {
+                const patchResponse = await fetch(PERSON_PATCH_URL, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -40,7 +46,7 @@ const PersonForm = () => {
     
                 setStatus('Person updated successfully!');
             } else if (getResponse.status === 404) {
-                const putResponse = await fetch('http://localhost:7285/api/PersonInsert', {
+                const putResponse = await fetch(PERSON_INSERT_URL, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -64,7 +70,7 @@ const PersonForm = () => {
 
     const handleDelete = async () => {
         try {
-            const deleteResponse = await fetch(`http://localhost:7285/api/person/${email}`, {
+            const deleteResponse = await fetch(`${PERSON_DELETE_URL}${email}`, {
                 method: 'DELETE',
             });
 

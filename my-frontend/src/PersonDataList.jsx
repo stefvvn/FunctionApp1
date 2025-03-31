@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
+import {
+  PERSON_GET_LIST_URL,
+  PERSON_CLEAR_ALL_URL,
+  PERSON_DELETE_URL,
+  PERSON_SEARCH_URL,
+  PERSON_EXPORT_JSON_URL,
+  PERSON_EXPORT_CSV_URL,
+} from "./apiUrl";
+
 const PeopleList = () => {
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,9 +21,9 @@ const PeopleList = () => {
   const fetchPeople = async () => {
     setLoading(true);
     setError(null);
- 
+
     try {
-      const response = await fetch("http://localhost:7285/api/PersonGetList");
+      const response = await fetch(PERSON_GET_LIST_URL);
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
@@ -35,7 +44,7 @@ const PeopleList = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:7285/api/person/clearall", {
+      const response = await fetch(PERSON_CLEAR_ALL_URL, {
         method: "DELETE",
       });
 
@@ -58,7 +67,7 @@ const PeopleList = () => {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:7285/api/person/${email}`, {
+      const response = await fetch(`${PERSON_DELETE_URL}${email}`, {
         method: "DELETE",
       });
 
@@ -87,7 +96,7 @@ const PeopleList = () => {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:7285/api/person/search?query=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(`${PERSON_SEARCH_URL}${encodeURIComponent(searchQuery)}`);
       if (!response.ok) {
         throw new Error("Failed to search data");
       }
@@ -107,10 +116,8 @@ const PeopleList = () => {
     setError(null);
 
     try {
-      const url = exportFormat === "json" 
-        ? "http://localhost:7285/api/person/exportJSON"
-        : "http://localhost:7285/api/person/exportCSV";
-      
+      const url = exportFormat === "json" ? PERSON_EXPORT_JSON_URL : PERSON_EXPORT_CSV_URL;
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to export data");
@@ -202,7 +209,7 @@ const PeopleList = () => {
         searchResults.length === 0 && !loading && <p>No results to display</p>
       )}
 
-<div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "20px" }}>
         <label htmlFor="exportFormat">Format: </label>
         <select
           id="exportFormat"
