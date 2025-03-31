@@ -83,6 +83,19 @@ body {
     background-color: #d9534f;
   }
   
+  .edit-button {
+    background-color: #007bff;
+    margin-right: 3px;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
   .error {
     color: red;
     font-weight: bold;

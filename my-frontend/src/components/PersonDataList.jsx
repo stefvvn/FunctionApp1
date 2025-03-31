@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
 import { fetchPeople, deleteAllPeople, deletePerson, searchPeople, exportData } from "../service/apiService.js";
 
-const PeopleList = () => {
+const PeopleList = ({ onEditPerson }) => { // Prop to handle edit action from the parent component (App)
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -153,6 +153,13 @@ const PeopleList = () => {
                 <td>{new Date(person.birthDate).toLocaleDateString()}</td>
                 <td>{person.age}</td>
                 <td>
+                  <button
+                    className="edit-button"
+                    onClick={() => onEditPerson(person)} // Trigger the edit action
+                    disabled={loading}
+                  >
+                    Edit
+                  </button>
                   <button
                     className="delete-button"
                     onClick={() => handleDeletePerson(person.email)}

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PersonForm.css';
 import { searchPerson, updatePerson, addPerson, deletePerson } from '../service/apiService.js';
 
-const PersonForm = () => {
+const PersonForm = ({ selectedPerson, onSavePerson }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -10,6 +10,23 @@ const PersonForm = () => {
     const [address, setAddress] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [status, setStatus] = useState('');
+
+    // If a person is selected for editing, populate the form with their data
+    useEffect(() => {
+        if (selectedPerson) {
+            setFirstName(selectedPerson.firstName);
+            setLastName(selectedPerson.lastName);
+            setEmail(selectedPerson.email);
+            setPhoneNumber(selectedPerson.phoneNumber);
+            setAddress(selectedPerson.address);
+            
+            // Make sure the birthDate is in the correct format for <input type="date" />
+            const formattedBirthDate = selectedPerson.birthDate 
+                ? new Date(selectedPerson.birthDate).toISOString().split('T')[0] // Converts to 'yyyy-mm-dd' format
+                : '';
+            setBirthDate(formattedBirthDate);
+        }
+    }, [selectedPerson]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,14 +41,17 @@ const PersonForm = () => {
         };
 
         try {
-            const existingPerson = await searchPerson(email);
-            if (existingPerson) {
+            if (selectedPerson) {
+                // If editing, update the person
                 await updatePerson(personData);
                 setStatus('Person updated successfully!');
             } else {
+                // If not editing, add a new person
                 await addPerson(personData);
                 setStatus('Person added successfully!');
             }
+
+            onSavePerson(); // Callback to inform parent (App) that data has been saved
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
@@ -54,7 +74,7 @@ const PersonForm = () => {
 
     return (
         <div className="form-container">
-            <h2>Create/Update/Delete Person</h2>
+            <h2>{selectedPerson ? 'Edit Person' : 'Create/Update/Delete Person'}</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-field">
                     <label>Email:</label>
@@ -63,6 +83,7 @@ const PersonForm = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        disabled={selectedPerson !== null} // Disable email input while editing
                     />
                 </div>
                 <div className="form-field">
@@ -112,15 +133,17 @@ const PersonForm = () => {
                 </div>
                 <div className="form-actions">
                     <button className="action-button" type="submit">
-                        Submit
+                        {selectedPerson ? 'Update' : 'Submit'}
                     </button>
-                    <button
-                        className="action-button delete-button"
-                        type="button"
-                        onClick={handleDelete}
-                    >
-                        Delete
-                    </button>
+                    {selectedPerson && (
+                        <button
+                            className="action-button delete-button"
+                            type="button"
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </button>
+                    )}
                 </div>
             </form>
             {status && <p className="status-message">{status}</p>}
