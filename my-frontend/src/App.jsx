@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import PersonForm from './PersonForm';
-import PeopleList from './PersonDataList';
+import PersonForm from './components/PersonForm';
+import PeopleList from './components/PersonDataList';
 
 function App() {
   return (

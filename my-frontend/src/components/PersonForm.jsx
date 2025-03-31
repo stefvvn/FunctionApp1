@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PersonForm.css';
-import { searchPerson, updatePerson, addPerson, deletePerson } from './apiService';
+import { searchPerson, updatePerson, addPerson, deletePerson } from '../service/apiService.js';
 
 const PersonForm = () => {
     const [firstName, setFirstName] = useState('');

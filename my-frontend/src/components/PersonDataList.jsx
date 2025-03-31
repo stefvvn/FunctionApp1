@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
-import { fetchPeople, deleteAllPeople, deletePerson, searchPeople, exportData } from "./apiService";
+import { fetchPeople, deleteAllPeople, deletePerson, searchPeople, exportData } from "../service/apiService.js";
 
 const PeopleList = () => {
   const [people, setPeople] = useState([]);
