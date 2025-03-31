@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
-import {
-  PERSON_GET_LIST_URL,
-  PERSON_CLEAR_ALL_URL,
-  PERSON_DELETE_URL,
-  PERSON_SEARCH_URL,
-  PERSON_EXPORT_JSON_URL,
-  PERSON_EXPORT_CSV_URL,
-} from "./apiUrl";
+import { fetchPeople, deleteAllPeople, deletePerson, searchPeople, exportData } from "./apiService";
 
 const PeopleList = () => {
   const [people, setPeople] = useState([]);
@@ -18,18 +11,12 @@ const PeopleList = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [exportFormat, setExportFormat] = useState("json");
 
-  const fetchPeople = async () => {
+  const handleFetchPeople = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(PERSON_GET_LIST_URL);
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const data = await response.json();
-      console.log(data);
+      const data = await fetchPeople();
       setPeople(data);
       setSearchResults(data);
     } catch (error) {
@@ -39,19 +26,12 @@ const PeopleList = () => {
     }
   };
 
-  const deletePeople = async () => {
+  const handleDeletePeople = async () => {
     setDeleting(true);
     setError(null);
 
     try {
-      const response = await fetch(PERSON_CLEAR_ALL_URL, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete data");
-      }
-
+      await deleteAllPeople();
       setPeople([]);
       setSearchResults([]);
       alert("People list deleted successfully!");
@@ -62,22 +42,14 @@ const PeopleList = () => {
     }
   };
 
-  const deletePerson = async (email) => {
+  const handleDeletePerson = async (email) => {
     setDeleting(true);
     setError(null);
 
     try {
-      const response = await fetch(`${PERSON_DELETE_URL}${email}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete person");
-      }
-
+      await deletePerson(email);
       setPeople((prevPeople) => prevPeople.filter((person) => person.email !== email));
       setSearchResults((prevResults) => prevResults.filter((person) => person.email !== email));
-
       alert("Person deleted successfully!");
     } catch (error) {
       setError(error.message);
@@ -86,7 +58,7 @@ const PeopleList = () => {
     }
   };
 
-  const searchPeople = async () => {
+  const handleSearchPeople = async () => {
     if (!searchQuery.trim()) {
       setSearchResults(people);
       return;
@@ -96,13 +68,7 @@ const PeopleList = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${PERSON_SEARCH_URL}${encodeURIComponent(searchQuery)}`);
-      if (!response.ok) {
-        throw new Error("Failed to search data");
-      }
-
-      const data = await response.json();
-      console.log(data);
+      const data = await searchPeople(searchQuery);
       setSearchResults(data);
     } catch (error) {
       setError(error.message);
@@ -111,19 +77,13 @@ const PeopleList = () => {
     }
   };
 
-  const exportData = async () => {
+  // Export the data
+  const handleExportData = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const url = exportFormat === "json" ? PERSON_EXPORT_JSON_URL : PERSON_EXPORT_CSV_URL;
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to export data");
-      }
-
-      const blob = await response.blob();
+      const blob = await exportData(exportFormat);
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
       link.download = exportFormat === "json" ? "peopleList.json" : "peopleList.csv";
@@ -136,7 +96,7 @@ const PeopleList = () => {
   };
 
   useEffect(() => {
-    fetchPeople();
+    handleFetchPeople();
   }, []);
 
   return (
@@ -145,10 +105,10 @@ const PeopleList = () => {
 
       <div className="controls">
         <div>
-          <button className="action-button" onClick={fetchPeople} disabled={loading}>
+          <button className="action-button" onClick={handleFetchPeople} disabled={loading}>
             {loading ? "Loading..." : "Fetch People"}
           </button>
-          <button className="action-button" onClick={deletePeople} disabled={deleting || searchResults.length === 0}>
+          <button className="action-button" onClick={handleDeletePeople} disabled={deleting || searchResults.length === 0}>
             {deleting ? "Deleting..." : "Delete List"}
           </button>
         </div>
@@ -160,7 +120,7 @@ const PeopleList = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="FirstName/LastName/Email"
           />
-          <button className="action-button" onClick={searchPeople} disabled={loading}>
+          <button className="action-button" onClick={handleSearchPeople} disabled={loading}>
             {loading ? "Searching..." : "Search"}
           </button>
         </div>
@@ -195,7 +155,7 @@ const PeopleList = () => {
                 <td>
                   <button
                     className="delete-button"
-                    onClick={() => deletePerson(person.email)}
+                    onClick={() => handleDeletePerson(person.email)}
                     disabled={deleting}
                   >
                     Delete
@@ -220,9 +180,7 @@ const PeopleList = () => {
           <option value="json">JSON</option>
           <option value="csv">CSV</option>
         </select>
-        <button 
-         className="action-button"
-         onClick={exportData} disabled={loading}>
+        <button className="action-button" onClick={handleExportData} disabled={loading}>
           {loading ? "Exporting..." : "Export"}
         </button>
       </div>

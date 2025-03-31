@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import './PersonForm.css';
-import {
-    PERSON_SEARCH_URL,
-    PERSON_PATCH_URL,
-    PERSON_INSERT_URL,
-    PERSON_DELETE_URL,
-} from './apiUrl';
+import { searchPerson, updatePerson, addPerson, deletePerson } from './apiService';
 
 const PersonForm = () => {
     const [firstName, setFirstName] = useState('');
@@ -18,7 +13,7 @@ const PersonForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const personData = {
             FirstName: firstName,
             LastName: lastName,
@@ -27,57 +22,24 @@ const PersonForm = () => {
             Address: address,
             BirthDate: birthDate,
         };
-    
+
         try {
-            const getResponse = await fetch(`${PERSON_SEARCH_URL}${email}`);
-            
-            if (getResponse.ok) {
-                const patchResponse = await fetch(PERSON_PATCH_URL, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(personData),
-                });
-    
-                if (!patchResponse.ok) {
-                    throw new Error('Failed to update person');
-                }
-    
+            const existingPerson = await searchPerson(email);
+            if (existingPerson) {
+                await updatePerson(personData);
                 setStatus('Person updated successfully!');
-            } else if (getResponse.status === 404) {
-                const putResponse = await fetch(PERSON_INSERT_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify([personData]),
-                });
-    
-                if (!putResponse.ok) {
-                    throw new Error('Failed to add person');
-                }
-    
-                setStatus('Person added successfully!');
             } else {
-                throw new Error('Unexpected error during search');
+                await addPerson(personData);
+                setStatus('Person added successfully!');
             }
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
     };
-    
 
     const handleDelete = async () => {
         try {
-            const deleteResponse = await fetch(`${PERSON_DELETE_URL}${email}`, {
-                method: 'DELETE',
-            });
-
-            if (!deleteResponse.ok) {
-                throw new Error('Failed to delete person');
-            }
-
+            await deletePerson(email);
             setStatus('Person deleted successfully!');
             setEmail('');
             setFirstName('');
