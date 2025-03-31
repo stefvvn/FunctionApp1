@@ -52,7 +52,7 @@ const searchPeople = async (query) => {
 const deleteAllPeople = async () => {
     const response = await fetch(apiUrls.PERSON_CLEAR_ALL_URL, { method: 'DELETE' });
     if (!response.ok) throw new Error('Failed to delete all people');
-    return response.json();
+    return response.text();
 };
 
 const exportData = async (format) => {

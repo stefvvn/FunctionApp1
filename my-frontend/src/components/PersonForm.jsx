@@ -47,7 +47,6 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
                 setStatus('Person added successfully!');
             }
 
-            onSavePerson();
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
@@ -63,8 +62,6 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
             setPhoneNumber('');
             setAddress('');
             setBirthDate('');
-
-            onSavePerson('');
         } catch (error) {
             setStatus('Error: ' + error.message);
         }

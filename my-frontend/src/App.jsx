@@ -7,7 +7,6 @@ function App() {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false);
 
   const handleFetchPeople = async () => {
     setLoading(true);
