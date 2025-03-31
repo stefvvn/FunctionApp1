@@ -4,9 +4,10 @@ import PeopleList from './components/PersonDataList';
 import { fetchPeople, addPerson, updatePerson } from './service/apiService';
 
 function App() {
-  const [selectedPerson, setSelectedPerson] = useState(null); // Store selected person for editing
+  const [selectedPerson, setSelectedPerson] = useState(null);
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleFetchPeople = async () => {
     setLoading(true);
@@ -25,21 +26,19 @@ function App() {
   }, []);
 
   const handleEditPerson = (person) => {
-    setSelectedPerson(person); // Set selected person to edit
+    setSelectedPerson(person);
   };
 
   const handleSavePerson = (personData) => {
     if (selectedPerson) {
-      // Update existing person
       updatePerson(selectedPerson.email, personData)
         .then(() => {
           alert('Person updated successfully!');
           handleFetchPeople();
-          setSelectedPerson(null); // Clear selected person
+          setSelectedPerson(null);
         })
         .catch((error) => console.error('Error updating person:', error));
     } else {
-      // Add new person
       addPerson(personData)
         .then(() => {
           alert('Person added successfully!');

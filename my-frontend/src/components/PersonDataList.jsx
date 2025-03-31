@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
 import { fetchPeople, deleteAllPeople, deletePerson, searchPeople, exportData } from "../service/apiService.js";
 
-const PeopleList = ({ onEditPerson }) => { // Prop to handle edit action from the parent component (App)
+const PeopleList = ({ onEditPerson }) => {
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -25,6 +25,7 @@ const PeopleList = ({ onEditPerson }) => { // Prop to handle edit action from th
       setLoading(false);
     }
   };
+
 
   const handleDeletePeople = async () => {
     setDeleting(true);
@@ -77,7 +78,6 @@ const PeopleList = ({ onEditPerson }) => { // Prop to handle edit action from th
     }
   };
 
-  // Export the data
   const handleExportData = async () => {
     setLoading(true);
     setError(null);
@@ -155,7 +155,7 @@ const PeopleList = ({ onEditPerson }) => { // Prop to handle edit action from th
                 <td>
                   <button
                     className="edit-button"
-                    onClick={() => onEditPerson(person)} // Trigger the edit action
+                    onClick={() => onEditPerson(person)}
                     disabled={loading}
                   >
                     Edit

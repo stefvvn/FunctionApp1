@@ -11,7 +11,6 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
     const [birthDate, setBirthDate] = useState('');
     const [status, setStatus] = useState('');
 
-    // If a person is selected for editing, populate the form with their data
     useEffect(() => {
         if (selectedPerson) {
             setFirstName(selectedPerson.firstName);
@@ -20,9 +19,8 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
             setPhoneNumber(selectedPerson.phoneNumber);
             setAddress(selectedPerson.address);
             
-            // Make sure the birthDate is in the correct format for <input type="date" />
             const formattedBirthDate = selectedPerson.birthDate 
-                ? new Date(selectedPerson.birthDate).toISOString().split('T')[0] // Converts to 'yyyy-mm-dd' format
+                ? new Date(selectedPerson.birthDate).toISOString().split('T')[0]
                 : '';
             setBirthDate(formattedBirthDate);
         }
@@ -42,16 +40,14 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
 
         try {
             if (selectedPerson) {
-                // If editing, update the person
                 await updatePerson(personData);
                 setStatus('Person updated successfully!');
             } else {
-                // If not editing, add a new person
                 await addPerson(personData);
                 setStatus('Person added successfully!');
             }
 
-            onSavePerson(); // Callback to inform parent (App) that data has been saved
+            onSavePerson();
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
@@ -67,6 +63,8 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
             setPhoneNumber('');
             setAddress('');
             setBirthDate('');
+
+            onSavePerson('');
         } catch (error) {
             setStatus('Error: ' + error.message);
         }
@@ -83,7 +81,7 @@ const PersonForm = ({ selectedPerson, onSavePerson }) => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        disabled={selectedPerson !== null} // Disable email input while editing
+                        disabled={selectedPerson !== null}
                     />
                 </div>
                 <div className="form-field">
