@@ -10,6 +10,8 @@ const PeopleList = ({ onEditPerson }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [exportFormat, setExportFormat] = useState("json");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; 
 
   const handleFetchPeople = async () => {
     setLoading(true);
@@ -25,7 +27,6 @@ const PeopleList = ({ onEditPerson }) => {
       setLoading(false);
     }
   };
-
 
   const handleDeletePeople = async () => {
     setDeleting(true);
@@ -95,6 +96,20 @@ const PeopleList = ({ onEditPerson }) => {
     }
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPeople = searchResults.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(searchResults.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prevPage => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prevPage => prevPage - 1);
+  };
+
   useEffect(() => {
     handleFetchPeople();
   }, []);
@@ -128,7 +143,7 @@ const PeopleList = ({ onEditPerson }) => {
 
       {error && <p className="error">{error}</p>}
 
-      {searchResults.length > 0 && !loading ? (
+      {currentPeople.length > 0 && !loading ? (
         <table className="people-table">
           <thead>
             <tr>
@@ -143,7 +158,7 @@ const PeopleList = ({ onEditPerson }) => {
             </tr>
           </thead>
           <tbody>
-            {searchResults.map((person, index) => (
+            {currentPeople.map((person, index) => (
               <tr key={index}>
                 <td>{person.firstName}</td>
                 <td>{person.lastName}</td>
@@ -175,6 +190,18 @@ const PeopleList = ({ onEditPerson }) => {
       ) : (
         searchResults.length === 0 && !loading && <p>No results to display</p>
       )}
+
+      <div className="pagination">
+        <button className="edit-button" onClick={handlePrevPage} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span style={{ margin: '5px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button className="edit-button" onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
 
       <div style={{ marginTop: "20px" }}>
         <label htmlFor="exportFormat">Format: </label>
