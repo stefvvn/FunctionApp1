@@ -24,6 +24,13 @@ function App() {
 
   useEffect(() => {
     handleFetchPeople();
+
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(savedDarkMode);
+
+    if (savedDarkMode) {
+      document.body.classList.add('dark-mode');
+    }
   }, []);
 
   const handleEditPerson = (person) => {
@@ -50,7 +57,12 @@ function App() {
   };
 
   const toggleDarkMode = () => {
-    setIsDarkMode(prevMode => !prevMode);
+    setIsDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem('darkMode', newMode);
+      return newMode;
+    });
+
     document.body.classList.toggle('dark-mode', !isDarkMode);
   };
 
