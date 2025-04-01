@@ -11,7 +11,7 @@ const PeopleList = ({ onEditPerson }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [exportFormat, setExportFormat] = useState("json");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; 
+  const itemsPerPage = 15; 
 
   const handleFetchPeople = async () => {
     setLoading(true);

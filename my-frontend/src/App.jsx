@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import PersonForm from './components/PersonForm';
 import PeopleList from './components/PersonDataList';
 import { fetchPeople, addPerson, updatePerson } from './service/apiService';
+import RetirementCalculator from './components/RetirementCalculator';
 import './App.css';
 
 function App() {
@@ -67,13 +69,37 @@ function App() {
   };
 
   return (
-    <div className={isDarkMode ? 'dark-mode' : ''} style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', padding: '20px' }}>
-      <button onClick={toggleDarkMode} className="dark-mode-toggle">
-        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-      </button>
-      <PeopleList people={people} loading={loading} onEditPerson={handleEditPerson} />
-      <PersonForm selectedPerson={selectedPerson} onSavePerson={handleSavePerson} />
-    </div>
+    <Router>
+      <div
+        className={isDarkMode ? 'dark-mode' : ''}
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: '20px',
+          flexWrap: 'wrap',
+          padding: '20px',
+        }}
+      >
+        <button onClick={toggleDarkMode} className="dark-mode-toggle">
+          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
+          <Link to="/">Home</Link>
+          <Link to="/retirement-calculator">Retirement Calculator</Link>
+        </div>
+
+        <Routes>
+          <Route path="/" element={
+            <>
+              <PeopleList people={people} loading={loading} onEditPerson={handleEditPerson} />
+              <PersonForm selectedPerson={selectedPerson} onSavePerson={handleSavePerson} />
+            </>
+          } />
+          <Route path="/retirement-calculator" element={<RetirementCalculator />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
