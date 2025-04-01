@@ -4,6 +4,8 @@ import './RetirementCalculator.css';
 const serbianPublicHolidays = [
   { date: '01-01', name: 'New Year\'s Day' },
   { date: '02-01', name: 'New Year\'s Day' },
+  { date: '07-01', name: 'Orthodox Christmas' },
+  { date: '08-01', name: 'Orthodox Christmas' },
   { date: '15-02', name: 'Statehood Day' },
   { date: '16-02', name: 'Statehood Day' },
   { date: '14-04', name: 'Orthodox Good Friday' },
@@ -11,8 +13,6 @@ const serbianPublicHolidays = [
   { date: '17-04', name: 'Orthodox Easter Monday' },
   { date: '01-05', name: 'Labor Day' },
   { date: '02-05', name: 'Labor Day' },
-  { date: '28-07', name: 'Vidovdan' },
-  { date: '29-07', name: 'Vidovdan' },
   { date: '11-11', name: 'Armistice Day' }
 ];
 
@@ -74,9 +74,10 @@ const RetirementCalculator = () => {
 
     setDaysUntilRetirement(adjustedBusinessDays);
   };
+
   return (
     <div className="form-container">
-      <h2>Days Until Retirement (Business Days)</h2>
+      <h2>Retirement Calculator</h2>
       <div className="form-field">
         <label>Birthdate:</label>
         <input
@@ -91,12 +92,13 @@ const RetirementCalculator = () => {
         <input
           type="number"
           value={retirementAge}
-          onChange={(e) => setRetirementAge(e.target.value)}
+          onChange={(e) => setRetirementAge(Number(e.target.value))}
           className="form-input"
+          min="18"
         />
       </div>
       <div className="form-actions">
-        <button onClick={calculateDaysUntilRetirement} className='calculate-button'>
+        <button onClick={calculateDaysUntilRetirement} className="calculate-button">
           Calculate
         </button>
       </div>
@@ -104,9 +106,9 @@ const RetirementCalculator = () => {
       {daysUntilRetirement !== null && (
         <div className="status-message">
           Business Days Until Retirement: {daysUntilRetirement}
-          <br/>
-          <br/>
-          <span>This number already takes into account 20 business days of PTO per year and Serbian public holidays.</span>
+          <br />
+          <br />
+          <span>This number already takes into account: <br />Weekends<br />Serbian public holidays<br />20 business days of PTO per year</span>
         </div>
       )}
     </div>
