@@ -80,9 +80,15 @@ function App() {
           padding: '20px',
         }}
       >
-        <button onClick={toggleDarkMode} className="dark-mode-toggle">
-          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-        </button>
+        {/* Dark Mode Switch */}
+        <label className="switch">
+          <input 
+            type="checkbox" 
+            checked={isDarkMode} 
+            onChange={toggleDarkMode}
+          />
+          <span className="slider round"></span>
+        </label>
 
         <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
           <Link to="/">Home</Link>
