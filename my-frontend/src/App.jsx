@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PersonForm from './components/PersonForm';
 import PeopleList from './components/PersonDataList';
 import { fetchPeople, addPerson, updatePerson } from './service/apiService';
+import './App.css'; // Add your global styles
 
 function App() {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Dark mode state
 
   const handleFetchPeople = async () => {
     setLoading(true);
@@ -47,8 +49,15 @@ function App() {
     }
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(prevMode => !prevMode);
+  };
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', padding: '20px' }}>
+    <div className={isDarkMode ? 'dark-mode' : ''} style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', padding: '20px' }}>
+      <button onClick={toggleDarkMode} className="dark-mode-toggle">
+        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
       <PeopleList people={people} loading={loading} onEditPerson={handleEditPerson} />
       <PersonForm selectedPerson={selectedPerson} onSavePerson={handleSavePerson} />
     </div>

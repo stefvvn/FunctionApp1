@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './PersonForm.css';
-import { searchPerson, updatePerson, addPerson, deletePerson } from '../service/apiService.js';
+import { updatePerson, addPerson, deletePerson } from '../service/apiService.js';
 
-const PersonForm = ({ selectedPerson, onSavePerson }) => {
+const PersonForm = ({ selectedPerson }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');

@@ -1,141 +1,201 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  
-  h2 {
-    color: #333;
-  }
-  
-  .controls {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .action-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    margin: 5px 0px 0px 5px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-  }
-  
-  .action-button:disabled {
-    background-color: #cccccc;
-  }
-  
-  .action-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .search-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-input {
-    padding: 8px;
-    margin-right: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-  }
-  
-  .people-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .people-table th, .people-table td {
-    padding: 5px;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
-  
-  .people-table th {
-    background-color: #f4f4f4;
-  }
-  
-  .people-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .people-table tr:hover {
-    background-color: #e2e2e2;
-  }
-  
-  .delete-button {
-    background-color: #ff4c4c;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .delete-button:hover {
-    background-color: #d9534f;
-  }
-  
-  .edit-button {
-    background-color: #007bff;
-    margin-right: 3px;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-  .edit-button:hover {
-    background-color: #0056b3;
-  }
-  .error {
-    color: red;
-    font-weight: bold;
-  }
-  
-  .export-container {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+h2 {
+  color: #333;
+}
 
-  .select-dropdown {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: white;
-    width: 150px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .select-dropdown:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-  
-  .select-dropdown:hover {
-    border-color: #007bff;
-  }
-  
-  .select-dropdown option {
-    padding: 10px;
-    background-color: white;
-    color: #333;
-  }
-  
-  .select-dropdown option:checked {
-    background-color: #007bff;
-    color: white;
-  }
-  
+.dark-mode body {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 10px;
+}
+
+.search-input {
+  padding: 8px;
+  margin-right: 10px;
+  margin-bottom: -5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.action-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  margin: 5px 0px 0px 5px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.action-button:disabled {
+  background-color: #cccccc;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+.dark-mode .search-input {
+  background-color: #333;
+  color: #fff;
+  border-color: #444;
+}
+
+.people-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.people-table th, .people-table td {
+  padding: 5px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.people-table th {
+  background-color: #f4f4f4;
+}
+
+.dark-mode .people-table th {
+  background-color: #444;
+}
+
+.people-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.dark-mode .people-table tr:nth-child(even) {
+  background-color: #333;
+}
+
+.people-table tr:hover {
+  background-color: #e2e2e2;
+}
+
+.dark-mode .people-table tr:hover {
+  background-color: #555;
+}
+
+.delete-button {
+  background-color: #ff4c4c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.dark-mode .delete-button {
+  background-color: #d9534f;
+}
+
+.delete-button:hover {
+  background-color: #d9534f;
+}
+
+.dark-mode .delete-button:hover {
+  background-color: #ff6b6b;
+}
+
+.edit-button {
+  background-color: #007bff;
+  margin-right: 3px;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.export-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.select-dropdown {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: white;
+  width: 150px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .select-dropdown {
+  background-color: #333;
+  color: #fff;
+  border-color: #444;
+}
+
+.select-dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.dark-mode .select-dropdown:focus {
+  border-color: #007bff;
+}
+
+.select-dropdown:hover {
+  border-color: #007bff;
+}
+
+.dark-mode .select-dropdown:hover {
+  border-color: #007bff;
+}
+
+.select-dropdown option {
+  padding: 10px;
+  background-color: white;
+  color: #333;
+}
+
+.dark-mode .select-dropdown option {
+  background-color: #444;
+  color: #fff;
+}
+
+.select-dropdown option:checked {
+  background-color: #007bff;
+  color: white;
+}
+
+.dark-mode .select-dropdown option:checked {
+  background-color: #0066cc;
+}
+
