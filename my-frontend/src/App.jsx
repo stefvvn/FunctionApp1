@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PersonForm from './components/PersonForm';
 import PeopleList from './components/PersonDataList';
 import { fetchPeople, addPerson, updatePerson } from './service/apiService';
-import './App.css'; // Add your global styles
+import './App.css';
 
 function App() {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleFetchPeople = async () => {
     setLoading(true);
