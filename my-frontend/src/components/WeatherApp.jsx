@@ -34,7 +34,7 @@ const WeatherApp = () => {
 
     try {
       const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=44.804&longitude=20.4651&hourly=temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m&current=temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m&timezone=auto&forecast_days=1`
+        `https://api.open-meteo.com/v1/forecast?latitude=44.8031&longitude=20.4813&hourly=temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m&current=temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m&timezone=auto&forecast_days=1`
       );
 
       if (!response.ok) {
@@ -63,11 +63,10 @@ const WeatherApp = () => {
     return "N/A";
   };
 
-  const isRaining = weatherData?.current_weather?.precipitation > 0;
+  const isRaining = weatherData?.current?.precipitation > 0;
 
   return (
     <div className="weather-container">
-      <h2>Weather App</h2>
       {loading && <p className="loading">Loading...</p>}
       {error && <p className="error">{error}</p>}
       {weatherData && weatherData.current && (

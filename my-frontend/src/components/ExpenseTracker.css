@@ -1,0 +1,37 @@
+.expense-tracker-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 942px;
+    margin: auto;
+    background-color: #fff;
+    /* transition: background-color 0.3s ease, color 0.3s ease; */
+  }
+  
+  .dark-mode .expense-tracker-container {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  h1 {
+    color: #333;
+    text-align: center;
+  }
+  
+  .dark-mode h1 {
+    color: #fff;
+  }
+  
+  .expense-tracker-graph {
+    width: 100%;
+    height: 500px;
+    margin-top: 30px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .dark-mode .expense-tracker-graph {
+    border-color: #555;
+  }
+  

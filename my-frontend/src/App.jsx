@@ -5,6 +5,7 @@ import PeopleList from "./components/PersonDataList";
 import { fetchPeople, addPerson, updatePerson } from "./service/apiService";
 import RetirementCalculator from "./components/RetirementCalculator";
 import WeatherApp from "./components/WeatherApp";
+import ExpenseTracker from "./components/ExpenseTracker";
 import "./App.css";
 
 function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
@@ -44,7 +45,6 @@ function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
 
 function App() {
   const [selectedPerson, setSelectedPerson] = useState(null);
-
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("darkMode");
     return savedMode === "true";
@@ -114,6 +114,7 @@ function App() {
           <Link to="/">Home</Link>
           <Link to="/retirement-calculator">Retirement Calculator</Link>
           <Link to="/weather">Weather</Link>
+          <Link to="/expense-tracker">Expense Tracker</Link>
         </div>
 
         <Routes>
@@ -132,6 +133,7 @@ function App() {
             element={<RetirementCalculator />}
           />
           <Route path="/weather" element={<WeatherApp />} />
+          <Route path="/expense-tracker" element={<ExpenseTracker />} />
         </Routes>
       </div>
     </Router>
