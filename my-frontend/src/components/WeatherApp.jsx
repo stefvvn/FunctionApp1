@@ -14,8 +14,8 @@ const HourlyForecastCard = ({
       <h4>{hour}:00</h4>
       <p>Temperature: {temperature_2m}°C</p>
       <p>Apparent Temperature: {apparenttemperature}°C</p>
-      <p>Precipitation: {precipitation} mm</p>
-      <p>Wind: {windSpeed} m/s</p>
+      {/* <p>Precipitation: {precipitation} mm</p> */}
+      {/* <p>Wind: {windSpeed} m/s</p> */}
       <p>{isRaining ? "Rain" : "No rain"}</p>
     </div>
   );
@@ -93,6 +93,7 @@ const WeatherApp = () => {
             })}
           </h3>
           <p>Current Temperature: {weatherData.current.temperature_2m}°C</p>
+          <p>Apparent Temperature: {weatherData.current.apparent_temperature}°C</p>
           <p>Current Wind: {weatherData.current.wind_speed_10m} m/s</p>
           <p>{isRaining ? "It is raining" : "No rain at the moment"}</p>
         </div>
