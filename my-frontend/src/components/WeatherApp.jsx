@@ -65,6 +65,13 @@ const WeatherApp = () => {
 
   const isRaining = weatherData?.current?.precipitation > 0;
 
+  const currentHour = new Date().getHours();
+
+  const filteredHourlyData = hourlyData?.time?.filter((time, index) => {
+    const hour = new Date(time).getHours();
+    return hour >= currentHour;
+  });
+
   return (
     <div className="weather-container">
       {loading && <p className="loading">Loading...</p>}
@@ -91,7 +98,7 @@ const WeatherApp = () => {
         </div>
       )}
 
-      {hourlyData && (
+      {filteredHourlyData && (
         <div className="hourly-forecast-container">
           <h3>
             Hourly Forecast for {city} on{" "}
@@ -102,7 +109,7 @@ const WeatherApp = () => {
             })}
           </h3>
           <div className="hourly-forecast-cards">
-            {hourlyData.time?.map((time, index) => {
+            {filteredHourlyData.map((time, index) => {
               const hour = new Date(time).getHours();
               const temperature = getHourlyData(index, "temperature_2m");
               const apparentTemperature = getHourlyData(

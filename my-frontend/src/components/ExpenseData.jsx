@@ -27,7 +27,6 @@ const ExpenseData = ({ onSubmit }) => {
     <form onSubmit={handleSubmit} className="expense-form">
       <h2>Enter Your Expenses</h2>
       <div className="form-field">
-        <label htmlFor="bill">Bills</label>
         <input
           type="number"
           name="bill"
@@ -38,7 +37,6 @@ const ExpenseData = ({ onSubmit }) => {
         />
       </div>
       <div className="form-field">
-        <label htmlFor="rent">Rent</label>
         <input
           type="number"
           name="rent"
@@ -49,7 +47,6 @@ const ExpenseData = ({ onSubmit }) => {
         />
       </div>
       <div className="form-field">
-        <label htmlFor="food">Food</label>
         <input
           type="number"
           name="food"
@@ -60,7 +57,6 @@ const ExpenseData = ({ onSubmit }) => {
         />
       </div>
       <div className="form-field">
-        <label htmlFor="fuel">Fuel</label>
         <input
           type="number"
           name="fuel"
@@ -71,7 +67,6 @@ const ExpenseData = ({ onSubmit }) => {
         />
       </div>
       <div className="form-field">
-        <label htmlFor="other">Other</label>
         <input
           type="number"
           name="other"
