@@ -1,26 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./WeatherApp.css";
-import { WiRain, WiDaySunny, WiCloudy, WiNightClear, WiDayCloudy } from "react-icons/wi";
+import { WiRain, WiDaySunny, WiCloudy } from "react-icons/wi";
 
-const HourlyForecastCard = ({
-  hour,
-  temperature_2m,
-  apparenttemperature,
-  precipitation,
-}) => {
-  const isRaining = precipitation > 0;
+const HourlyForecastCard = ({ hour, temperature, apparentTemperature, precipitation, precipitationProbability }) => {
 
   const getWeatherIcon = () => {
-    if (isRaining) return <WiRain size={24} color="blue" />;
-    if (temperature_2m < 0) return <WiCloudy size={24} color="gray" />;
-    return <WiDaySunny size={24} color="orange" />;
-  };
-
-  const getTimeOfDayIcon = () => {
-    if (hour >= 6 && hour < 12) return <WiDaySunny size={24} color="gold" />;
-    if (hour >= 12 && hour < 18) return <WiDayCloudy size={24} color="orange" />;
-    if (hour >= 18 && hour < 21) return <WiCloudy size={24} color="gray" />;
-    return <WiNightClear size={24} color="navy" />;
+    if (precipitation > 0 || precipitationProbability > 0) return <WiRain size={32} />;
+    if (temperature < 0) return <WiCloudy size={32} color="gray" />;
+    return <WiDaySunny size={32} color="orange" />;
   };
 
   const getTimeOfDayClass = () => {
@@ -33,19 +20,18 @@ const HourlyForecastCard = ({
   return (
     <div className={`hourly-forecast-card ${getTimeOfDayClass()}`}>
       <h4>{hour}:00</h4>
-      <p>Temperature: {temperature_2m}°C</p>
-      <p>Apparent Temperature: {apparenttemperature}°C</p>
-      <p>{isRaining ? "Rain" : "No rain"}</p>
-      <div className="icons">
-        {getWeatherIcon()} {getTimeOfDayIcon()}
+      <div className="weather-icon">
+        {getWeatherIcon()}
+        {precipitationProbability > 0 && (
+          <span className="precipitation-probability">
+            {precipitationProbability}% chance
+          </span>
+        )}
       </div>
+      <p>Temp: {temperature}°C</p>
+      <p>Feels Like: {apparentTemperature}°C</p>
     </div>
   );
-};
-
-const WeatherIcon = ({ isRaining }) => {
-  if (isRaining) return <WiRain />;
-  return <WiDaySunny />;
 };
 
 const WeatherApp = () => {
@@ -54,6 +40,7 @@ const WeatherApp = () => {
   const [error, setError] = useState(null);
   const [city, setCity] = useState("Belgrade");
   const [inputValue, setInputValue] = useState("Belgrade");
+  const [currentHourIndex, setCurrentHourIndex] = useState(0);
 
   const fetchCoordinates = async (cityName) => {
     const apiKey = "7f83ca25f80f40b6b8aacd66203fb05b";
@@ -63,13 +50,9 @@ const WeatherApp = () => {
 
     try {
       const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Unable to fetch city coordinates");
-      }
+      if (!response.ok) throw new Error("Unable to fetch city coordinates");
       const data = await response.json();
-      if (data.results.length === 0) {
-        throw new Error("City not found");
-      }
+      if (data.results.length === 0) throw new Error("City not found");
       const { lat, lng } = data.results[0].geometry;
       return { latitude: lat, longitude: lng };
     } catch (error) {
@@ -87,15 +70,18 @@ const WeatherApp = () => {
       if (!coordinates) return;
 
       const { latitude, longitude } = coordinates;
-
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m&current=temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m&timezone=auto&forecast_days=1`;
+      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,apparent_temperature,precipitation&timezone=auto&forecast_days=1`;
 
       const response = await fetch(weatherUrl);
-      if (!response.ok) {
-        throw new Error("Unable to fetch weather data");
-      }
+      if (!response.ok) throw new Error("Unable to fetch weather data");
       const data = await response.json();
       setWeatherData(data);
+
+      const currentHour = new Date().getHours();
+      const index = data.hourly.time.findIndex((time) => {
+        return new Date(time).getHours() === currentHour;
+      });
+      setCurrentHourIndex(index !== -1 ? index : 0);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -116,21 +102,12 @@ const WeatherApp = () => {
 
   const hourlyData = weatherData?.hourly;
 
-  const getHourlyData = (index, type) => {
-    if (hourlyData && hourlyData[type]) {
-      return hourlyData[type][index] ?? "N/A";
+  const chunkedHourlyData = [];
+  if (hourlyData) {
+    for (let i = 0; i < hourlyData.time.length; i += 3) {
+      chunkedHourlyData.push(hourlyData.time.slice(i, i + 3));
     }
-    return "N/A";
-  };
-
-  const isRaining = weatherData?.current?.precipitation > 0;
-
-  const currentHour = new Date().getHours();
-
-  const filteredHourlyData = hourlyData?.time?.filter((time) => {
-    const hour = new Date(time).getHours();
-    return hour >= currentHour;
-  });
+  }
 
   return (
     <div className="weather-container">
@@ -146,61 +123,55 @@ const WeatherApp = () => {
 
       {loading && <p className="loading">Loading...</p>}
       {error && <p className="error">{error}</p>}
-      {weatherData && weatherData.current && (
+      {weatherData && (
         <div className="weather-details">
-          <h3>
-            Weather in {city} on{" "}
-            {new Date(weatherData.current.time).toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}{" "}
-            at{" "}
-            {new Date(weatherData.current.time).toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </h3>
-          <p>Current Temperature: {weatherData.current.temperature_2m}°C</p>
-          <p>Apparent Temperature: {weatherData.current.apparent_temperature}°C</p>
-          <p>Current Wind: {weatherData.current.wind_speed_10m} m/s</p>
-          <p>{isRaining ? "It is raining" : "No rain at the moment"}</p>
-        </div>
-      )}
-
-      {filteredHourlyData && (
-        <div className="hourly-forecast-container">
-          <h3>
-            Hourly Forecast for {city} on{" "}
-            {new Date(hourlyData.time[0]).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </h3>
-          <div className="hourly-forecast-cards">
-            {filteredHourlyData.map((time) => {
-              const hour = new Date(time).getHours();
-              const index = hourlyData.time.findIndex((t) => t === time);
-              const temperature = getHourlyData(index, "temperature_2m");
-              const apparentTemperature = getHourlyData(
-                index,
-                "apparent_temperature"
-              );
-              const precipitation = getHourlyData(index, "precipitation");
-              const windSpeed = getHourlyData(index, "wind_speed_10m");
-              return (
-                <HourlyForecastCard
-                  key={index}
-                  hour={hour}
-                  temperature_2m={temperature}
-                  apparenttemperature={apparentTemperature}
-                  precipitation={precipitation}
-                  windSpeed={windSpeed}
-                />
-              );
-            })}
+          <h3>Weather in {city}</h3>
+          <div id="hourlyForecastCarousel" className="carousel slide">
+            <div className="carousel-inner">
+              {chunkedHourlyData.map((chunk, chunkIndex) => (
+                <div
+                  key={chunkIndex}
+                  className={`carousel-item ${
+                    chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""
+                  }`}
+                >
+                  <div className="d-flex justify-content-center">
+                    {chunk.map((time, index) => {
+                      const hour = new Date(time).getHours();
+                      const dataIndex = chunkIndex * 3 + index;
+                      return (
+                        <HourlyForecastCard
+                          key={dataIndex}
+                          hour={hour}
+                          temperature={hourlyData.temperature_2m[dataIndex]}
+                          apparentTemperature={hourlyData.apparent_temperature[dataIndex]}
+                          precipitation={hourlyData.precipitation[dataIndex]}
+                          precipitationProbability={hourlyData.precipitation_probability[dataIndex]}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#hourlyForecastCarousel"
+              data-bs-slide="prev"
+            >
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#hourlyForecastCarousel"
+              data-bs-slide="next"
+            >
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Next</span>
+            </button>
           </div>
         </div>
       )}

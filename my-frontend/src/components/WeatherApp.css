@@ -1,10 +1,11 @@
 .weather-container {
     font-family: Arial, sans-serif;
     padding: 20px;
-    border-radius: 8px;
-    width: 900px;
+    width: 800px;
     margin: auto;
-    background-color: #fff;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dark-mode .weather-container {
@@ -73,18 +74,40 @@
 }
 
 .weather-container .hourly-forecast-card {
-    background-color: #f8f8f8;
+    background-color: #fff;
     padding: 15px;
     border-radius: 8px;
     margin: 10px;
     text-align: center;
     width: 100px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.weather-container .hourly-forecast-card:hover {
+    transform: scale(1.05);
 }
 
 .dark-mode .weather-container .hourly-forecast-card {
-    background-color: #444;
-    color: #fff;
+    color: inherit;
+}
+
+.dark-mode .hourly-forecast-card.morning,
+.dark-mode .hourly-forecast-card.afternoon,
+.dark-mode .hourly-forecast-card.evening {
+    color: #000;
+}
+
+.dark-mode .hourly-forecast-card.morning p,
+.dark-mode .hourly-forecast-card.afternoon p,
+.dark-mode .hourly-forecast-card.evening p {
+    color: #000;
+}
+
+.dark-mode .hourly-forecast-card.morning h4,
+.dark-mode .hourly-forecast-card.afternoon h4,
+.dark-mode .hourly-forecast-card.evening h4 {
+    color: #000;
 }
 
 .weather-container .hourly-forecast-card h4 {
@@ -104,13 +127,18 @@
 }
 
 .hourly-forecast-card {
-    background-color: #f8f8f8;
+    background-color: #fff;
     padding: 15px;
     border-radius: 8px;
     margin: 10px;
     text-align: center;
     width: 100px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.hourly-forecast-card:hover {
+    transform: scale(1.05);
 }
 
 .hourly-forecast-card.morning {
@@ -130,6 +158,14 @@
     color: #fff;
 }
 
+.hourly-forecast-card.night .weather-icon {
+    color: #80d4ff;
+}
+
+.hourly-forecast-card.night .precipitation-probability {
+    color: #80d4ff;
+}
+
 .weather-container .search-form {
     display: flex;
     align-items: center;
@@ -140,11 +176,11 @@
 }
 
 .weather-container .search-form input {
-    padding: 6px 10px;
-    border-radius: 5px;
+    padding: 10px;
     border: 1px solid #ccc;
-    font-size: 14px;
-    width: 200px;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 60%;
     transition: all 0.3s ease;
 }
 
@@ -155,13 +191,13 @@
 }
 
 .weather-container .search-form button {
-    padding: 6px 15px;
+    padding: 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -195,4 +231,84 @@
 .dark-mode .weather-container .search-form button:hover {
     background-color: #16a085;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+#hourlyForecastCarousel {
+    overflow: visible;
+    width: 100%;
+    position: relative;
+    padding: 0 15px;
+}
+
+.carousel-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    margin: 0 -15px;
+}
+
+.carousel-item {
+    display: flex;
+    flex: 0 0 auto;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+    justify-content: center;
+}
+
+.carousel-inner .d-flex {
+    gap: 10px;
+    justify-content: center;
+    padding: 0 15px;
+}
+
+.hourly-forecast-card {
+    flex: 0 0 28%;
+    max-width: 28%;
+    margin: 0 5px;
+    transition: transform 0.3s ease;
+}
+
+.hourly-forecast-card:hover {
+    transform: scale(1.05);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.carousel-control-prev {
+    left: 10px;
+}
+
+.carousel-control-next {
+    right: 10px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
+.dark-mode .carousel-control-prev-icon,
+.dark-mode .carousel-control-next-icon {
+    filter: invert(0);
+}
+
+.precipitation-probability {
+    font-size: 12px;
+    color: #007bff;
+    margin-left: 5px;
 }

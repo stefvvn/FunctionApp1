@@ -8,6 +8,8 @@ import WeatherApp from "./components/WeatherApp";
 import ExpenseTracker from "./components/ExpenseTracker";
 import ToDoApp from "./components/ToDoApp";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
   const [people, setPeople] = useState([]);
