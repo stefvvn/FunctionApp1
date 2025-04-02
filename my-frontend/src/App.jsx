@@ -6,11 +6,10 @@ import { fetchPeople, addPerson, updatePerson } from './service/apiService';
 import RetirementCalculator from './components/RetirementCalculator';
 import './App.css';
 
-function App() {
-  const [selectedPerson, setSelectedPerson] = useState(null);
+// Home Component - This is where we fetch people
+function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleFetchPeople = async () => {
     setLoading(true);
@@ -26,14 +25,19 @@ function App() {
 
   useEffect(() => {
     handleFetchPeople();
+  }, []); // Fetch people only when Home component is rendered
 
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    setIsDarkMode(savedDarkMode);
+  return (
+    <>
+      <PeopleList people={people} loading={loading} onEditPerson={handleEditPerson} />
+      <PersonForm selectedPerson={selectedPerson} onSavePerson={handleSavePerson} />
+    </>
+  );
+}
 
-    if (savedDarkMode) {
-      document.body.classList.add('dark-mode');
-    }
-  }, []);
+function App() {
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleEditPerson = (person) => {
     setSelectedPerson(person);
@@ -44,7 +48,6 @@ function App() {
       updatePerson(selectedPerson.email, personData)
         .then(() => {
           alert('Person updated successfully!');
-          handleFetchPeople();
           setSelectedPerson(null);
         })
         .catch((error) => console.error('Error updating person:', error));
@@ -52,7 +55,6 @@ function App() {
       addPerson(personData)
         .then(() => {
           alert('Person added successfully!');
-          handleFetchPeople();
         })
         .catch((error) => console.error('Error adding person:', error));
     }
@@ -82,9 +84,9 @@ function App() {
       >
         {/* Dark Mode Switch */}
         <label className="switch">
-          <input 
-            type="checkbox" 
-            checked={isDarkMode} 
+          <input
+            type="checkbox"
+            checked={isDarkMode}
             onChange={toggleDarkMode}
           />
           <span className="slider round"></span>
@@ -96,12 +98,16 @@ function App() {
         </div>
 
         <Routes>
-          <Route path="/" element={
-            <>
-              <PeopleList people={people} loading={loading} onEditPerson={handleEditPerson} />
-              <PersonForm selectedPerson={selectedPerson} onSavePerson={handleSavePerson} />
-            </>
-          } />
+          <Route
+            path="/"
+            element={
+              <Home
+                handleEditPerson={handleEditPerson}
+                selectedPerson={selectedPerson}
+                handleSavePerson={handleSavePerson}
+              />
+            }
+          />
           <Route path="/retirement-calculator" element={<RetirementCalculator />} />
         </Routes>
       </div>
