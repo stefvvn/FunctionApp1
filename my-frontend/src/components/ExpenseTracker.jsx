@@ -136,17 +136,16 @@ const ExpenseTracker = () => {
 
     svg
       .append("text")
-      .attr("x", totalNode.x1 - 23)
+      .attr("x", totalNode.x1 - 50)
       .attr("y", (totalNode.y1 + totalNode.y0) / 2)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .style("font-weight", "bold")
-      .text(`Total ${totalValue.toFixed(2)}€`);
+      .text(`Total ${totalValue.toFixed(0)}€`);
   }, [expenses]);
 
   return (
     <div className="expense-tracker-container">
-      <h1>Track Your Monthly Expenses</h1>
       <ExpenseData onSubmit={handleFormSubmit} />
       <br />
       <svg ref={svgRef} className="expense-tracker-graph"></svg>
