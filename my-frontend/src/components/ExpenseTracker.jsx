@@ -136,7 +136,7 @@ const ExpenseTracker = () => {
 
     svg
       .append("text")
-      .attr("x", totalNode.x1 - 50)
+      .attr("x", totalNode.x1 - 30)
       .attr("y", (totalNode.y1 + totalNode.y0) / 2)
       .attr("dy", ".35em")
       .style("text-anchor", "end")

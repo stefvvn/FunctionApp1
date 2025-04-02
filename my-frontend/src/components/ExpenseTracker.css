@@ -25,11 +25,10 @@
    */
   .expense-tracker-graph {
     background-color: #fff;
-    width: 100%;
-    height: 550px;
     margin-top: 30px;
+    padding:2%;
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 8px;
   }
   
   .dark-mode .expense-tracker-graph {
