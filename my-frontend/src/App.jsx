@@ -6,6 +6,7 @@ import { fetchPeople, addPerson, updatePerson } from "./service/apiService";
 import RetirementCalculator from "./components/RetirementCalculator";
 import WeatherApp from "./components/WeatherApp";
 import ExpenseTracker from "./components/ExpenseTracker";
+import ToDoApp from "./components/ToDoApp";
 import "./App.css";
 
 function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
@@ -115,6 +116,7 @@ function App() {
           <Link to="/retirement-calculator">Retirement Calculator</Link>
           <Link to="/weather">Weather</Link>
           <Link to="/expense-tracker">Expense Tracker</Link>
+          <Link to="/todo">ToDo</Link>
         </div>
 
         <Routes>
@@ -134,6 +136,7 @@ function App() {
           />
           <Route path="/weather" element={<WeatherApp />} />
           <Route path="/expense-tracker" element={<ExpenseTracker />} />
+          <Route path="/todo" element={<ToDoApp />} />
         </Routes>
       </div>
     </Router>

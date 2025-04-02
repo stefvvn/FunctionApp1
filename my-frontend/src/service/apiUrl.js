@@ -8,6 +8,8 @@ export const PERSON_GET_LIST_URL = `${API_BASE_URL}/PersonGetList`;
 export const PERSON_CLEAR_ALL_URL = `${API_BASE_URL}/person/clearall`;
 export const PERSON_EXPORT_JSON_URL = `${API_BASE_URL}/person/exportJSON`;
 export const PERSON_EXPORT_CSV_URL = `${API_BASE_URL}/person/exportCSV`;
+export const TINYMCE_API_KEY = 'mpxkgfe2pwchdufwdpceqiyxppynn6cpzsvj9abrlmyp4xy7';
+
 
 export default {
   PERSON_SEARCH_URL,
@@ -18,4 +20,5 @@ export default {
   PERSON_CLEAR_ALL_URL,
   PERSON_EXPORT_JSON_URL,
   PERSON_EXPORT_CSV_URL,
+  TINYMCE_API_KEY
 };
