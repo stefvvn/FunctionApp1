@@ -1,4 +1,4 @@
-html, body {
+/* html, body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -57,8 +57,7 @@ body {
 .dark-mode-toggle:focus {
   outline: none;
 }
-
-/* Switch Style */
+*/
 .switch {
   position: relative;
   display: inline-block;
@@ -104,8 +103,7 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Add some styles for dark mode (optional) */
 body.dark-mode {
   background-color: #121212;
   color: #ffffff;
-}
+} 

@@ -4,6 +4,7 @@ import PersonForm from './components/PersonForm';
 import PeopleList from './components/PersonDataList';
 import { fetchPeople, addPerson, updatePerson } from './service/apiService';
 import RetirementCalculator from './components/RetirementCalculator';
+import WeatherApp from './components/WeatherApp';
 import './App.css';
 
 function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
@@ -84,7 +85,7 @@ function App() {
       <div
         className={isDarkMode ? 'dark-mode' : ''}
         style={{
-          display: 'flex',
+          display: 'block',
           justifyContent: 'space-between',
           gap: '20px',
           flexWrap: 'wrap',
@@ -103,6 +104,7 @@ function App() {
         <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
           <Link to="/">Home</Link>
           <Link to="/retirement-calculator">Retirement Calculator</Link>
+          <Link to="/weather">Weather</Link>
         </div>
 
         <Routes>
@@ -117,10 +119,12 @@ function App() {
             }
           />
           <Route path="/retirement-calculator" element={<RetirementCalculator />} />
+          <Route path="/weather" element={<WeatherApp />} />
         </Routes>
       </div>
     </Router>
   );
 }
+
 
 export default App;
