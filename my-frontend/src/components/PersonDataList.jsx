@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./PeopleList.css";
-import { fetchPeople, deleteAllPeople, deletePerson, searchPeople, exportData } from "../service/apiService.js";
+import {
+  fetchPeople,
+  deleteAllPeople,
+  deletePerson,
+  searchPeople,
+  exportData,
+} from "../service/apiService.js";
 
 const PeopleList = ({ onEditPerson }) => {
   const [people, setPeople] = useState([]);
@@ -11,7 +17,7 @@ const PeopleList = ({ onEditPerson }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [exportFormat, setExportFormat] = useState("json");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15; 
+  const itemsPerPage = 15;
 
   const handleFetchPeople = async () => {
     setLoading(true);
@@ -50,8 +56,12 @@ const PeopleList = ({ onEditPerson }) => {
 
     try {
       await deletePerson(email);
-      setPeople((prevPeople) => prevPeople.filter((person) => person.email !== email));
-      setSearchResults((prevResults) => prevResults.filter((person) => person.email !== email));
+      setPeople((prevPeople) =>
+        prevPeople.filter((person) => person.email !== email)
+      );
+      setSearchResults((prevResults) =>
+        prevResults.filter((person) => person.email !== email)
+      );
       alert("Person deleted successfully!");
     } catch (error) {
       setError(error.message);
@@ -87,7 +97,8 @@ const PeopleList = ({ onEditPerson }) => {
       const blob = await exportData(exportFormat);
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = exportFormat === "json" ? "peopleList.json" : "peopleList.csv";
+      link.download =
+        exportFormat === "json" ? "peopleList.json" : "peopleList.csv";
       link.click();
     } catch (error) {
       setError(error.message);
@@ -103,11 +114,11 @@ const PeopleList = ({ onEditPerson }) => {
   const totalPages = Math.ceil(searchResults.length / itemsPerPage);
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(prevPage => prevPage + 1);
+    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(prevPage => prevPage - 1);
+    if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
   };
 
   useEffect(() => {
@@ -120,10 +131,18 @@ const PeopleList = ({ onEditPerson }) => {
 
       <div className="controls">
         <div>
-          <button className="action-button" onClick={handleFetchPeople} disabled={loading}>
+          <button
+            className="action-button"
+            onClick={handleFetchPeople}
+            disabled={loading}
+          >
             {loading ? "Loading..." : "Fetch People"}
           </button>
-          <button className="action-button" onClick={handleDeletePeople} disabled={deleting || searchResults.length === 0}>
+          <button
+            className="action-button"
+            onClick={handleDeletePeople}
+            disabled={deleting || searchResults.length === 0}
+          >
             {deleting ? "Deleting..." : "Delete List"}
           </button>
         </div>
@@ -135,7 +154,11 @@ const PeopleList = ({ onEditPerson }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="FirstName/LastName/Email"
           />
-          <button className="action-button" onClick={handleSearchPeople} disabled={loading}>
+          <button
+            className="action-button"
+            onClick={handleSearchPeople}
+            disabled={loading}
+          >
             {loading ? "Searching..." : "Search"}
           </button>
         </div>
@@ -192,13 +215,21 @@ const PeopleList = ({ onEditPerson }) => {
       )}
 
       <div className="pagination">
-        <button className="edit-button" onClick={handlePrevPage} disabled={currentPage === 1}>
+        <button
+          className="edit-button"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        >
           Previous
         </button>
-        <span style={{ margin: '5px' }}>
+        <span style={{ margin: "5px" }}>
           Page {currentPage} of {totalPages}
         </span>
-        <button className="edit-button" onClick={handleNextPage} disabled={currentPage === totalPages}>
+        <button
+          className="edit-button"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+        >
           Next
         </button>
       </div>
@@ -214,7 +245,11 @@ const PeopleList = ({ onEditPerson }) => {
           <option value="json">JSON</option>
           <option value="csv">CSV</option>
         </select>
-        <button className="action-button" onClick={handleExportData} disabled={loading}>
+        <button
+          className="action-button"
+          onClick={handleExportData}
+          disabled={loading}
+        >
           {loading ? "Exporting..." : "Export"}
         </button>
       </div>

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import PersonForm from './components/PersonForm';
-import PeopleList from './components/PersonDataList';
-import { fetchPeople, addPerson, updatePerson } from './service/apiService';
-import RetirementCalculator from './components/RetirementCalculator';
-import WeatherApp from './components/WeatherApp';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import PersonForm from "./components/PersonForm";
+import PeopleList from "./components/PersonDataList";
+import { fetchPeople, addPerson, updatePerson } from "./service/apiService";
+import RetirementCalculator from "./components/RetirementCalculator";
+import WeatherApp from "./components/WeatherApp";
+import "./App.css";
 
 function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
   const [people, setPeople] = useState([]);
@@ -17,7 +17,7 @@ function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
       const data = await fetchPeople();
       setPeople(data);
     } catch (error) {
-      console.error('Error fetching people:', error);
+      console.error("Error fetching people:", error);
     } finally {
       setLoading(false);
     }
@@ -29,25 +29,32 @@ function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
 
   return (
     <>
-      <PeopleList people={people} loading={loading} onEditPerson={handleEditPerson} />
-      <PersonForm selectedPerson={selectedPerson} onSavePerson={handleSavePerson} />
+      <PeopleList
+        people={people}
+        loading={loading}
+        onEditPerson={handleEditPerson}
+      />
+      <PersonForm
+        selectedPerson={selectedPerson}
+        onSavePerson={handleSavePerson}
+      />
     </>
   );
 }
 
 function App() {
   const [selectedPerson, setSelectedPerson] = useState(null);
-  
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem('darkMode');
-    return savedMode === 'true';
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode === "true";
   });
 
   useEffect(() => {
     if (isDarkMode) {
-      document.body.classList.add('dark-mode');
+      document.body.classList.add("dark-mode");
     } else {
-      document.body.classList.remove('dark-mode');
+      document.body.classList.remove("dark-mode");
     }
   }, [isDarkMode]);
 
@@ -59,23 +66,23 @@ function App() {
     if (selectedPerson) {
       updatePerson(selectedPerson.email, personData)
         .then(() => {
-          alert('Person updated successfully!');
+          alert("Person updated successfully!");
           setSelectedPerson(null);
         })
-        .catch((error) => console.error('Error updating person:', error));
+        .catch((error) => console.error("Error updating person:", error));
     } else {
       addPerson(personData)
         .then(() => {
-          alert('Person added successfully!');
+          alert("Person added successfully!");
         })
-        .catch((error) => console.error('Error adding person:', error));
+        .catch((error) => console.error("Error adding person:", error));
     }
   };
 
   const toggleDarkMode = () => {
     setIsDarkMode((prevMode) => {
       const newMode = !prevMode;
-      localStorage.setItem('darkMode', newMode);
+      localStorage.setItem("darkMode", newMode);
       return newMode;
     });
   };
@@ -83,13 +90,13 @@ function App() {
   return (
     <Router>
       <div
-        className={isDarkMode ? 'dark-mode' : ''}
+        className={isDarkMode ? "dark-mode" : ""}
         style={{
-          display: 'block',
-          justifyContent: 'space-between',
-          gap: '20px',
-          flexWrap: 'wrap',
-          padding: '20px',
+          display: "block",
+          justifyContent: "space-between",
+          gap: "20px",
+          flexWrap: "wrap",
+          padding: "20px",
         }}
       >
         <label className="switch">
@@ -101,7 +108,9 @@ function App() {
           <span className="slider round"></span>
         </label>
 
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          style={{ flex: 1, display: "flex", justifyContent: "space-between" }}
+        >
           <Link to="/">Home</Link>
           <Link to="/retirement-calculator">Retirement Calculator</Link>
           <Link to="/weather">Weather</Link>
@@ -118,13 +127,15 @@ function App() {
               />
             }
           />
-          <Route path="/retirement-calculator" element={<RetirementCalculator />} />
+          <Route
+            path="/retirement-calculator"
+            element={<RetirementCalculator />}
+          />
           <Route path="/weather" element={<WeatherApp />} />
         </Routes>
       </div>
     </Router>
   );
 }
-
 
 export default App;
