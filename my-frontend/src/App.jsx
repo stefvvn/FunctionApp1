@@ -6,7 +6,6 @@ import { fetchPeople, addPerson, updatePerson } from './service/apiService';
 import RetirementCalculator from './components/RetirementCalculator';
 import './App.css';
 
-// Home Component - This is where we fetch people
 function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,7 +24,7 @@ function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
 
   useEffect(() => {
     handleFetchPeople();
-  }, []); // Fetch people only when Home component is rendered
+  }, []);
 
   return (
     <>
@@ -37,7 +36,19 @@ function Home({ handleEditPerson, selectedPerson, handleSavePerson }) {
 
 function App() {
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    return savedMode === 'true';
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
 
   const handleEditPerson = (person) => {
     setSelectedPerson(person);
@@ -66,8 +77,6 @@ function App() {
       localStorage.setItem('darkMode', newMode);
       return newMode;
     });
-
-    document.body.classList.toggle('dark-mode', !isDarkMode);
   };
 
   return (
@@ -82,7 +91,6 @@ function App() {
           padding: '20px',
         }}
       >
-        {/* Dark Mode Switch */}
         <label className="switch">
           <input
             type="checkbox"
