@@ -13,7 +13,7 @@ const HourlyForecastCard = ({
   apparentTemperature,
   precipitation,
   precipitationProbability,
-  isCurrentTime,
+  highlight,
 }) => {
   const getWeatherIcon = () => {
     if (precipitation > 0 || precipitationProbability > 0)
@@ -31,9 +31,7 @@ const HourlyForecastCard = ({
 
   return (
     <div
-      className={`hourly-forecast-card ${getTimeOfDayClass()} ${
-        isCurrentTime ? "current-time-card" : ""
-      }`}
+      className={`hourly-forecast-card ${getTimeOfDayClass()} ${highlight ? 'highlighted' : ''}`}
     >
       <h4>{hour}:00</h4>
       <div className="weather-icon">
@@ -91,6 +89,7 @@ const WeatherApp = () => {
       setWeatherData(data);
 
       const currentHour = new Date(data.current.time).getHours();
+
       const index = data.hourly.time.findIndex((time) => {
         return new Date(time).getHours() === currentHour;
       });
@@ -159,15 +158,15 @@ const WeatherApp = () => {
               {chunkedHourlyData.map((chunk, chunkIndex) => (
                 <div
                   key={chunkIndex}
-                  className={`carousel-item ${
-                    chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""
-                  }`}
+                  className={`carousel-item ${chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""}`}
                 >
                   <div className="d-flex justify-content-center">
                     {chunk.map((time, index) => {
                       const hour = new Date(time).getHours();
                       const dataIndex = chunkIndex * 3 + index;
-                      const isCurrentTime = hour === new Date().getHours();
+
+                      const highlight = hour === new Date(weatherData.current.time).getHours();
+
                       return (
                         <HourlyForecastCard
                           key={dataIndex}
@@ -176,7 +175,7 @@ const WeatherApp = () => {
                           apparentTemperature={hourlyData.apparent_temperature[dataIndex]}
                           precipitation={hourlyData.precipitation[dataIndex]}
                           precipitationProbability={hourlyData.precipitation_probability[dataIndex]}
-                          isCurrentTime={isCurrentTime}
+                          highlight={highlight}
                         />
                       );
                     })}

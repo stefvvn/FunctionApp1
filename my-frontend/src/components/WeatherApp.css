@@ -315,7 +315,7 @@
   margin-left: 5px;
 }
 
-.current-time-card {
-  border: 3px solid #ff6600;
-  border-radius: 8px;
+.hourly-forecast-card.highlighted {
+  border: 2px solid #ff6347;
+  background-color: rgba(255, 99, 71, 0.1);
 }
