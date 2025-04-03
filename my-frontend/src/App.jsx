@@ -99,7 +99,7 @@ function App() {
           justifyContent: "space-between",
           gap: "20px",
           flexWrap: "wrap",
-          padding: "20px"
+          padding: "20px",
         }}
       >
         <div style={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>

@@ -317,5 +317,5 @@
 
 .hourly-forecast-card.highlighted {
   border: 2px solid #ff6347;
-  background-color: rgba(255, 99, 71, 0.1);
+  /* background-color: rgba(255, 99, 71, 0.1); */
 }

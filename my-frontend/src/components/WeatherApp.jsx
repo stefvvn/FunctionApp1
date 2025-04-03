@@ -31,7 +31,7 @@ const HourlyForecastCard = ({
 
   return (
     <div
-      className={`hourly-forecast-card ${getTimeOfDayClass()} ${highlight ? 'highlighted' : ''}`}
+      className={`hourly-forecast-card ${getTimeOfDayClass()} ${highlight ? "highlighted" : ""}`}
     >
       <h4>{hour}:00</h4>
       <div className="weather-icon">
@@ -165,16 +165,21 @@ const WeatherApp = () => {
                       const hour = new Date(time).getHours();
                       const dataIndex = chunkIndex * 3 + index;
 
-                      const highlight = hour === new Date(weatherData.current.time).getHours();
+                      const highlight =
+                        hour === new Date(weatherData.current.time).getHours();
 
                       return (
                         <HourlyForecastCard
                           key={dataIndex}
                           hour={hour}
                           temperature={hourlyData.temperature_2m[dataIndex]}
-                          apparentTemperature={hourlyData.apparent_temperature[dataIndex]}
+                          apparentTemperature={
+                            hourlyData.apparent_temperature[dataIndex]
+                          }
                           precipitation={hourlyData.precipitation[dataIndex]}
-                          precipitationProbability={hourlyData.precipitation_probability[dataIndex]}
+                          precipitationProbability={
+                            hourlyData.precipitation_probability[dataIndex]
+                          }
                           highlight={highlight}
                         />
                       );
@@ -189,7 +194,10 @@ const WeatherApp = () => {
               data-bs-target="#hourlyForecastCarousel"
               data-bs-slide="prev"
             >
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
               <span className="visually-hidden">Previous</span>
             </button>
             <button
@@ -198,7 +206,10 @@ const WeatherApp = () => {
               data-bs-target="#hourlyForecastCarousel"
               data-bs-slide="next"
             >
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
               <span className="visually-hidden">Next</span>
             </button>
           </div>
