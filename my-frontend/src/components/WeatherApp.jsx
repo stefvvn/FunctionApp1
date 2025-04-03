@@ -13,6 +13,7 @@ const HourlyForecastCard = ({
   apparentTemperature,
   precipitation,
   precipitationProbability,
+  isCurrentTime,
 }) => {
   const getWeatherIcon = () => {
     if (precipitation > 0 || precipitationProbability > 0)
@@ -29,7 +30,11 @@ const HourlyForecastCard = ({
   };
 
   return (
-    <div className={`hourly-forecast-card ${getTimeOfDayClass()}`}>
+    <div
+      className={`hourly-forecast-card ${getTimeOfDayClass()} ${
+        isCurrentTime ? "current-time-card" : ""
+      }`}
+    >
       <h4>{hour}:00</h4>
       <div className="weather-icon">
         {getWeatherIcon()}
@@ -85,7 +90,7 @@ const WeatherApp = () => {
       const data = await response.json();
       setWeatherData(data);
 
-      const currentHour = new Date().getHours();
+      const currentHour = new Date(data.current.time).getHours();
       const index = data.hourly.time.findIndex((time) => {
         return new Date(time).getHours() === currentHour;
       });
@@ -121,7 +126,6 @@ const WeatherApp = () => {
     if (!currentTime) return "Loading time...";
 
     const weatherDate = new Date(currentTime);
-
     const localDate = new Date();
 
     const hour = weatherDate.getHours();
@@ -155,24 +159,24 @@ const WeatherApp = () => {
               {chunkedHourlyData.map((chunk, chunkIndex) => (
                 <div
                   key={chunkIndex}
-                  className={`carousel-item ${chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""}`}
+                  className={`carousel-item ${
+                    chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""
+                  }`}
                 >
                   <div className="d-flex justify-content-center">
                     {chunk.map((time, index) => {
                       const hour = new Date(time).getHours();
                       const dataIndex = chunkIndex * 3 + index;
+                      const isCurrentTime = hour === new Date().getHours();
                       return (
                         <HourlyForecastCard
                           key={dataIndex}
                           hour={hour}
                           temperature={hourlyData.temperature_2m[dataIndex]}
-                          apparentTemperature={
-                            hourlyData.apparent_temperature[dataIndex]
-                          }
+                          apparentTemperature={hourlyData.apparent_temperature[dataIndex]}
                           precipitation={hourlyData.precipitation[dataIndex]}
-                          precipitationProbability={
-                            hourlyData.precipitation_probability[dataIndex]
-                          }
+                          precipitationProbability={hourlyData.precipitation_probability[dataIndex]}
+                          isCurrentTime={isCurrentTime}
                         />
                       );
                     })}
@@ -186,10 +190,7 @@ const WeatherApp = () => {
               data-bs-target="#hourlyForecastCarousel"
               data-bs-slide="prev"
             >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Previous</span>
             </button>
             <button
@@ -198,10 +199,7 @@ const WeatherApp = () => {
               data-bs-target="#hourlyForecastCarousel"
               data-bs-slide="next"
             >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Next</span>
             </button>
           </div>

@@ -314,3 +314,8 @@
   color: #007bff;
   margin-left: 5px;
 }
+
+.current-time-card {
+  border: 3px solid #ff6600;
+  border-radius: 8px;
+}
