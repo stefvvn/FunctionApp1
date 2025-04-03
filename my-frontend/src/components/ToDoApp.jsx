@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import "./ToDoApp.css";
 import apiUrls from "../service/apiUrl.js";
 
 const ToDoApp = () => {
-  const [tasks, setTasks] = useState([]);
+  const loadTasksFromLocalStorage = () => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  };
+
+  const [tasks, setTasks] = useState(loadTasksFromLocalStorage);
   const [titleInput, setTitleInput] = useState("");
   const [bodyInput, setBodyInput] = useState("");
   const [editingTask, setEditingTask] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleAddTask = () => {
     if (titleInput.trim() === "" || bodyInput.trim() === "") return;

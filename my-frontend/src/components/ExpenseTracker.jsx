@@ -121,7 +121,7 @@ const ExpenseTracker = () => {
       .style("fill", (d) => color(d.name))
       .style("stroke", "#000");
 
-    node
+      node.filter((d) => d.name !== "Total")
       .append("text")
       .attr("x", (d) => d.x1 + 5)
       .attr("y", (d) => (d.y1 + d.y0) / 2)
