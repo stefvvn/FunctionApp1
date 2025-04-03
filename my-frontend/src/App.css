@@ -46,4 +46,14 @@ input:checked + .slider:before {
 body.dark-mode {
   background-color: #121212;
   color: #ffffff;
-} 
+}
+
+.menu-button {
+  background-color: #007bff;
+  margin-left: 5px ;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}

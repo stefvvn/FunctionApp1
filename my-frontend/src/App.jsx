@@ -99,26 +99,56 @@ function App() {
           justifyContent: "space-between",
           gap: "20px",
           flexWrap: "wrap",
-          padding: "20px",
+          padding: "20px"
         }}
       >
-        <label className="switch">
-          <input
-            type="checkbox"
-            checked={isDarkMode}
-            onChange={toggleDarkMode}
-          />
-          <span className="slider round"></span>
-        </label>
-
-        <div
-          style={{ flex: 1, display: "flex", justifyContent: "space-between" }}
-        >
-          <Link to="/">Home</Link>
-          <Link to="/retirement-calculator">Retirement Calculator</Link>
-          <Link to="/weather">Weather</Link>
-          <Link to="/expense-tracker">Expense Tracker</Link>
-          <Link to="/todo">ToDo</Link>
+        <div style={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={isDarkMode}
+              onChange={toggleDarkMode}
+            />
+            <span className="slider round"></span>
+          </label>
+          <div className="dropdown">
+            <button
+              className="menu-button dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Apps
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li>
+                <Link className="dropdown-item" to="/">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/retirement-calculator">
+                  Retirement Calculator
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/weather">
+                  Weather
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/expense-tracker">
+                  Expense Tracker
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/todo">
+                  ToDo
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <Routes>
