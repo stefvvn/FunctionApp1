@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { sankey as d3Sankey, sankeyLinkHorizontal } from "d3-sankey";
 import ExpenseData from "./ExpenseData";
-import './ExpenseTracker.css';
+import "./ExpenseTracker.css";
 
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState(null);
@@ -57,7 +57,7 @@ const ExpenseTracker = () => {
       .size([width, height]);
 
     const nodes = Array.from(
-      new Set(data.map((d) => d.source).concat(data.map((d) => d.target)))
+      new Set(data.map((d) => d.source).concat(data.map((d) => d.target))),
     ).map((name) => ({ name }));
 
     const links = data.map((d) => ({
@@ -121,7 +121,8 @@ const ExpenseTracker = () => {
       .style("fill", (d) => color(d.name))
       .style("stroke", "#000");
 
-      node.filter((d) => d.name !== "Total")
+    node
+      .filter((d) => d.name !== "Total")
       .append("text")
       .attr("x", (d) => d.x1 + 5)
       .attr("y", (d) => (d.y1 + d.y0) / 2)

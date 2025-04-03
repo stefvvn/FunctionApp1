@@ -68,7 +68,8 @@ h2 {
   margin-top: 20px;
 }
 
-.people-table th, .people-table td {
+.people-table th,
+.people-table td {
   padding: 5px;
   text-align: left;
   border: 1px solid #ddd;
@@ -202,4 +203,3 @@ h2 {
 .pagination {
   margin-top: 5px;
 }
-

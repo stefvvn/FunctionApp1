@@ -16,7 +16,7 @@ const isWeekend = (date) => {
 const isSerbianHoliday = (date) => {
   const formattedDate = formatDate(date);
   return serbianPublicHolidays.some(
-    (holiday) => holiday.date === formattedDate
+    (holiday) => holiday.date === formattedDate,
   );
 };
 
@@ -36,7 +36,10 @@ const calculateBusinessDays = (startDate, endDate) => {
   return totalBusinessDays;
 };
 
-const calculateVacationDays = (yearsUntilRetirement, vacationDaysPerYear = 20) => {
+const calculateVacationDays = (
+  yearsUntilRetirement,
+  vacationDaysPerYear = 20,
+) => {
   return yearsUntilRetirement * vacationDaysPerYear;
 };
 
@@ -101,7 +104,7 @@ const RetirementCalculator = () => {
     }
 
     const retirementDate = new Date(
-      birthDateObj.setFullYear(birthDateObj.getFullYear() + retirementAge)
+      birthDateObj.setFullYear(birthDateObj.getFullYear() + retirementAge),
     );
 
     if (retirementDate < today) {
@@ -109,12 +112,16 @@ const RetirementCalculator = () => {
       return;
     }
 
-    const businessDaysUntilRetirement = calculateBusinessDays(today, retirementDate);
+    const businessDaysUntilRetirement = calculateBusinessDays(
+      today,
+      retirementDate,
+    );
     const totalDaysUntilRetirement = Math.floor(
-      (retirementDate - today) / (1000 * 60 * 60 * 24)
+      (retirementDate - today) / (1000 * 60 * 60 * 24),
     );
 
-    const yearsUntilRetirement = retirementDate.getFullYear() - today.getFullYear();
+    const yearsUntilRetirement =
+      retirementDate.getFullYear() - today.getFullYear();
     const vacationDays = calculateVacationDays(yearsUntilRetirement);
 
     setDaysUntilRetirement({

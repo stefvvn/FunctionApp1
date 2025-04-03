@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import './ExpenseData.css';
+import React, { useState } from "react";
+import "./ExpenseData.css";
 
 const ExpenseData = ({ onSubmit }) => {
   const [expense, setExpense] = useState({
-    bill: '',
-    rent: '',
-    food: '',
-    fuel: '',
-    other: ''
+    bill: "",
+    rent: "",
+    food: "",
+    fuel: "",
+    other: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setExpense((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -77,7 +77,9 @@ const ExpenseData = ({ onSubmit }) => {
         />
       </div>
       <div className="form-actions">
-        <button type="submit" className="form-submit">Submit</button>
+        <button type="submit" className="form-submit">
+          Submit
+        </button>
       </div>
     </form>
   );

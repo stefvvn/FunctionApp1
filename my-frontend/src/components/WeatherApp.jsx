@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "./WeatherApp.css";
 import { WiRain, WiDaySunny, WiCloudy } from "react-icons/wi";
-import { OPEN_METEO_API_URL, OPEN_CAGE_API_URL, OPEN_CAGE_API_KEY } from '../service/apiUrl.js';
+import {
+  OPEN_METEO_API_URL,
+  OPEN_CAGE_API_URL,
+  OPEN_CAGE_API_KEY,
+} from "../service/apiUrl.js";
 
-const HourlyForecastCard = ({ hour, temperature, apparentTemperature, precipitation, precipitationProbability }) => {
+const HourlyForecastCard = ({
+  hour,
+  temperature,
+  apparentTemperature,
+  precipitation,
+  precipitationProbability,
+}) => {
   const getWeatherIcon = () => {
-    if (precipitation > 0 || precipitationProbability > 0) return <WiRain size={32} />;
+    if (precipitation > 0 || precipitationProbability > 0)
+      return <WiRain size={32} />;
     if (temperature < 0) return <WiCloudy size={32} color="gray" />;
     return <WiDaySunny size={32} color="orange" />;
   };
@@ -44,7 +55,7 @@ const WeatherApp = () => {
 
   const fetchCoordinates = async (cityName) => {
     const url = `${OPEN_CAGE_API_URL}?q=${encodeURIComponent(cityName)}&key=${OPEN_CAGE_API_KEY}`;
-    
+
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Unable to fetch city coordinates");
@@ -108,17 +119,16 @@ const WeatherApp = () => {
   const getCurrentTime = () => {
     const currentTime = weatherData?.current?.time;
     if (!currentTime) return "Loading time...";
-  
+
     const weatherDate = new Date(currentTime);
-    
+
     const localDate = new Date();
-    
+
     const hour = weatherDate.getHours();
     const minute = localDate.getMinutes();
-    
-    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+    return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
   };
-  
 
   return (
     <div className="weather-container">
@@ -136,8 +146,10 @@ const WeatherApp = () => {
       {error && <p className="error">{error}</p>}
       {weatherData && (
         <div className="weather-details">
-          <h3>Current weather in {city}, {getCurrentTime()}</h3>
-          
+          <h3>
+            Current weather in {city}, {getCurrentTime()}
+          </h3>
+
           <div id="hourlyForecastCarousel" className="carousel slide">
             <div className="carousel-inner">
               {chunkedHourlyData.map((chunk, chunkIndex) => (
@@ -154,9 +166,13 @@ const WeatherApp = () => {
                           key={dataIndex}
                           hour={hour}
                           temperature={hourlyData.temperature_2m[dataIndex]}
-                          apparentTemperature={hourlyData.apparent_temperature[dataIndex]}
+                          apparentTemperature={
+                            hourlyData.apparent_temperature[dataIndex]
+                          }
                           precipitation={hourlyData.precipitation[dataIndex]}
-                          precipitationProbability={hourlyData.precipitation_probability[dataIndex]}
+                          precipitationProbability={
+                            hourlyData.precipitation_probability[dataIndex]
+                          }
                         />
                       );
                     })}
@@ -170,7 +186,10 @@ const WeatherApp = () => {
               data-bs-target="#hourlyForecastCarousel"
               data-bs-slide="prev"
             >
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
               <span className="visually-hidden">Previous</span>
             </button>
             <button
@@ -179,7 +198,10 @@ const WeatherApp = () => {
               data-bs-target="#hourlyForecastCarousel"
               data-bs-slide="next"
             >
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
               <span className="visually-hidden">Next</span>
             </button>
           </div>

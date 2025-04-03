@@ -1,20 +1,20 @@
 .expense-tracker-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 942px;
-    margin: auto;
-    /* background-color: #fff; */
-    /* transition: background-color 0.3s ease, color 0.3s ease; */
-  }
-  
-  /* .dark-mode .expense-tracker-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 942px;
+  margin: auto;
+  /* background-color: #fff; */
+  /* transition: background-color 0.3s ease, color 0.3s ease; */
+}
+
+/* .dark-mode .expense-tracker-container {
     background-color: #333;
     color: #fff;
   } */
-  
-  /* h1 {
+
+/* h1 {
     color: #333;
     text-align: center;
   }
@@ -23,18 +23,17 @@
     color: #fff;
   }
    */
-  .expense-tracker-graph {
-    height: 600px;
-    width:110%;
-    background-color: #fff;
-    margin-top: 30px;
-    padding:2%;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .dark-mode .expense-tracker-graph {
-    border-color: #555;
-    background-color: #333;
-  }
-  
+.expense-tracker-graph {
+  height: 600px;
+  width: 110%;
+  background-color: #fff;
+  margin-top: 30px;
+  padding: 2%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.dark-mode .expense-tracker-graph {
+  border-color: #555;
+  background-color: #333;
+}

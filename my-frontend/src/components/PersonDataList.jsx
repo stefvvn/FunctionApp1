@@ -57,10 +57,10 @@ const PeopleList = ({ onEditPerson }) => {
     try {
       await deletePerson(email);
       setPeople((prevPeople) =>
-        prevPeople.filter((person) => person.email !== email)
+        prevPeople.filter((person) => person.email !== email),
       );
       setSearchResults((prevResults) =>
-        prevResults.filter((person) => person.email !== email)
+        prevResults.filter((person) => person.email !== email),
       );
       alert("Person deleted successfully!");
     } catch (error) {

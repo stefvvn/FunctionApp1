@@ -44,8 +44,8 @@ const ToDoApp = () => {
       tasks.map((task) =>
         task.id === editingTask.id
           ? { ...task, title: titleInput, body: bodyInput }
-          : task
-      )
+          : task,
+      ),
     );
     setEditingTask(null);
     setTitleInput("");
@@ -55,8 +55,8 @@ const ToDoApp = () => {
   const handleToggleComplete = (id) => {
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      ),
     );
   };
 
