@@ -77,9 +77,9 @@ const ToDoApp = () => {
           init={{
             height: 200,
             menubar: false,
-            plugins: ["link", "lists", "autolink"],
+            plugins: ["link", "lists", "autolink", "table", "insertdatetime"],
             toolbar:
-              "undo redo | bold italic underline | bullist numlist | link",
+              "undo redo | bold italic underline strikethrough| bullist numlist table | backcolor insertdatetime link",
           }}
         />
         {editingTask ? (

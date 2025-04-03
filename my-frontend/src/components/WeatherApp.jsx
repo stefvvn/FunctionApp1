@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./WeatherApp.css";
 import { WiRain, WiDaySunny, WiCloudy } from "react-icons/wi";
+import { WEATHER_API_URL, OPEN_CAGE_API_URL, OPEN_CAGE_API_KEY } from '../service/apiUrl.js';
 
 const HourlyForecastCard = ({ hour, temperature, apparentTemperature, precipitation, precipitationProbability }) => {
-
   const getWeatherIcon = () => {
     if (precipitation > 0 || precipitationProbability > 0) return <WiRain size={32} />;
     if (temperature < 0) return <WiCloudy size={32} color="gray" />;
@@ -43,11 +43,8 @@ const WeatherApp = () => {
   const [currentHourIndex, setCurrentHourIndex] = useState(0);
 
   const fetchCoordinates = async (cityName) => {
-    const apiKey = "7f83ca25f80f40b6b8aacd66203fb05b";
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
-      cityName
-    )}&key=${apiKey}`;
-
+    const url = `${OPEN_CAGE_API_URL}?q=${encodeURIComponent(cityName)}&key=${OPEN_CAGE_API_KEY}`;
+    
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Unable to fetch city coordinates");
@@ -70,7 +67,7 @@ const WeatherApp = () => {
       if (!coordinates) return;
 
       const { latitude, longitude } = coordinates;
-      const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,apparent_temperature,precipitation&timezone=auto&forecast_days=1`;
+      const weatherUrl = `${WEATHER_API_URL}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,apparent_temperature,precipitation&timezone=auto&forecast_days=1`;
 
       const response = await fetch(weatherUrl);
       if (!response.ok) throw new Error("Unable to fetch weather data");
