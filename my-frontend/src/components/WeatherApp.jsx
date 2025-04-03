@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./WeatherApp.css";
 import { WiRain, WiDaySunny, WiCloudy } from "react-icons/wi";
-import { WEATHER_API_URL, OPEN_CAGE_API_URL, OPEN_CAGE_API_KEY } from '../service/apiUrl.js';
+import { OPEN_METEO_API_URL, OPEN_CAGE_API_URL, OPEN_CAGE_API_KEY } from '../service/apiUrl.js';
 
 const HourlyForecastCard = ({ hour, temperature, apparentTemperature, precipitation, precipitationProbability }) => {
   const getWeatherIcon = () => {
@@ -67,7 +67,7 @@ const WeatherApp = () => {
       if (!coordinates) return;
 
       const { latitude, longitude } = coordinates;
-      const weatherUrl = `${WEATHER_API_URL}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,apparent_temperature,precipitation&timezone=auto&forecast_days=1`;
+      const weatherUrl = `${OPEN_METEO_API_URL}?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,apparent_temperature,precipitation&current=temperature_2m,apparent_temperature,precipitation&timezone=auto&forecast_days=1`;
 
       const response = await fetch(weatherUrl);
       if (!response.ok) throw new Error("Unable to fetch weather data");
@@ -88,13 +88,12 @@ const WeatherApp = () => {
 
   useEffect(() => {
     fetchWeather();
-  }, []);
+  }, [city]);
 
   const handleInputChange = (e) => setInputValue(e.target.value);
 
   const handleSearch = () => {
     setCity(inputValue);
-    fetchWeather();
   };
 
   const hourlyData = weatherData?.hourly;
@@ -105,6 +104,21 @@ const WeatherApp = () => {
       chunkedHourlyData.push(hourlyData.time.slice(i, i + 3));
     }
   }
+
+  const getCurrentTime = () => {
+    const currentTime = weatherData?.current?.time;
+    if (!currentTime) return "Loading time...";
+  
+    const weatherDate = new Date(currentTime);
+    
+    const localDate = new Date();
+    
+    const hour = weatherDate.getHours();
+    const minute = localDate.getMinutes();
+    
+    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+  };
+  
 
   return (
     <div className="weather-container">
@@ -122,15 +136,14 @@ const WeatherApp = () => {
       {error && <p className="error">{error}</p>}
       {weatherData && (
         <div className="weather-details">
-          <h3>Weather in {city}</h3>
+          <h3>Current weather in {city}, {getCurrentTime()}</h3>
+          
           <div id="hourlyForecastCarousel" className="carousel slide">
             <div className="carousel-inner">
               {chunkedHourlyData.map((chunk, chunkIndex) => (
                 <div
                   key={chunkIndex}
-                  className={`carousel-item ${
-                    chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""
-                  }`}
+                  className={`carousel-item ${chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""}`}
                 >
                   <div className="d-flex justify-content-center">
                     {chunk.map((time, index) => {

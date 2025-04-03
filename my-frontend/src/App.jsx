@@ -95,7 +95,7 @@ function App() {
       <div
         className={isDarkMode ? "dark-mode" : ""}
         style={{
-          display: "block",
+          display: "flex",
           justifyContent: "space-between",
           gap: "20px",
           flexWrap: "wrap",
@@ -124,27 +124,31 @@ function App() {
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li>
                 <Link className="dropdown-item" to="/">
-                  Home
+                  CRUD Azure Functions
                 </Link>
               </li>
+              <div className="dropdown-divider"></div>
               <li>
                 <Link className="dropdown-item" to="/retirement-calculator">
                   Retirement Calculator
                 </Link>
               </li>
+              <div className="dropdown-divider"></div>
               <li>
                 <Link className="dropdown-item" to="/weather">
-                  Weather
+                  Weather Cards
                 </Link>
               </li>
+              <div className="dropdown-divider"></div>
               <li>
                 <Link className="dropdown-item" to="/expense-tracker">
-                  Expense Tracker
+                  Expense Tracker Graph
                 </Link>
               </li>
+              <div className="dropdown-divider"></div>
               <li>
                 <Link className="dropdown-item" to="/todo">
-                  ToDo
+                  ToDo List
                 </Link>
               </li>
             </ul>
