@@ -13,6 +13,7 @@ const ToDoApp = () => {
   const [titleInput, setTitleInput] = useState("");
   const [bodyInput, setBodyInput] = useState("");
   const [editingTask, setEditingTask] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -77,14 +78,23 @@ const ToDoApp = () => {
   };
 
   const sortedTasks = [...tasks].sort((a, b) => {
-    const aLatest = new Date(a.updatedAt) > new Date(a.createdAt) ? a.updatedAt : a.createdAt;
-    const bLatest = new Date(b.updatedAt) > new Date(b.createdAt) ? b.updatedAt : b.createdAt;
+    const aLatest =
+      new Date(a.updatedAt) > new Date(a.createdAt) ? a.updatedAt : a.createdAt;
+    const bLatest =
+      new Date(b.updatedAt) > new Date(b.createdAt) ? b.updatedAt : b.createdAt;
     return new Date(bLatest) - new Date(aLatest);
   });
+
+  const filteredTasks = sortedTasks.filter(
+    (task) =>
+      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      task.body.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="todo-container">
       <h2>ToDo List</h2>
+
       <div className="todo-form">
         <input
           type="text"
@@ -110,8 +120,18 @@ const ToDoApp = () => {
           <button onClick={handleAddTask}>Add</button>
         )}
       </div>
+
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       <div className="todo-cards">
-        {sortedTasks.map((task) => (
+        {filteredTasks.map((task) => (
           <div
             key={task.id}
             className={`todo-card ${task.completed ? "completed" : ""}`}
