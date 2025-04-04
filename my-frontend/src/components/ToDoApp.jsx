@@ -21,10 +21,16 @@ const ToDoApp = () => {
   const handleAddTask = () => {
     if (titleInput.trim() === "" || bodyInput.trim() === "") return;
 
-    setTasks([
-      ...tasks,
-      { id: Date.now(), title: titleInput, body: bodyInput, completed: false },
-    ]);
+    const newTask = {
+      id: Date.now(),
+      title: titleInput,
+      body: bodyInput,
+      completed: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    setTasks([newTask, ...tasks]);
     setTitleInput("");
     setBodyInput("");
   };
@@ -43,9 +49,14 @@ const ToDoApp = () => {
     setTasks(
       tasks.map((task) =>
         task.id === editingTask.id
-          ? { ...task, title: titleInput, body: bodyInput }
-          : task,
-      ),
+          ? {
+              ...task,
+              title: titleInput,
+              body: bodyInput,
+              updatedAt: new Date().toISOString(),
+            }
+          : task
+      )
     );
     setEditingTask(null);
     setTitleInput("");
@@ -55,10 +66,21 @@ const ToDoApp = () => {
   const handleToggleComplete = (id) => {
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task,
-      ),
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
     );
   };
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
+
+  const sortedTasks = [...tasks].sort((a, b) => {
+    const aLatest = new Date(a.updatedAt) > new Date(a.createdAt) ? a.updatedAt : a.createdAt;
+    const bLatest = new Date(b.updatedAt) > new Date(b.createdAt) ? b.updatedAt : b.createdAt;
+    return new Date(bLatest) - new Date(aLatest);
+  });
 
   return (
     <div className="todo-container">
@@ -89,7 +111,7 @@ const ToDoApp = () => {
         )}
       </div>
       <div className="todo-cards">
-        {tasks.map((task) => (
+        {sortedTasks.map((task) => (
           <div
             key={task.id}
             className={`todo-card ${task.completed ? "completed" : ""}`}
@@ -99,6 +121,13 @@ const ToDoApp = () => {
             <div className="todo-actions">
               <button onClick={() => handleEditTask(task)}>Edit</button>
               <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+            </div>
+            <div className="todo-timestamp">
+              {task.createdAt !== task.updatedAt ? (
+                <span>Edited on {formatTimestamp(task.updatedAt)}</span>
+              ) : (
+                <span>Created on {formatTimestamp(task.createdAt)}</span>
+              )}
             </div>
           </div>
         ))}
