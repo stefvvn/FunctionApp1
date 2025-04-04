@@ -27,18 +27,7 @@ h2 {
   margin-bottom: 15px;
 }
 
-.form-field label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #555;
-}
-
-.dark-mode .form-field label {
-  color: #ddd;
-}
-
-.form-input {
+.form-field input {
   width: 94%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -48,16 +37,63 @@ h2 {
   color: #333;
 }
 
-.dark-mode .form-input {
+.dark-mode .form-field input {
   background-color: #444;
   color: #fff;
   border-color: #555;
+}
+
+.form-field .remove-field {
+  background-color: #ff6666;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+.form-field .remove-field:hover {
+  background-color: #e64a19;
+}
+
+.dark-mode .form-field .remove-field {
+  background-color: #e64a19;
+}
+
+.dark-mode .form-field .remove-field:hover {
+  background-color: #b33c00;
 }
 
 .form-actions {
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+.add-field {
+  background-color: #66b3ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-field:hover {
+  background-color: #3380e0;
+}
+
+.dark-mode .add-field {
+  background-color: #5a5a5a;
+}
+
+.dark-mode .add-field:hover {
+  background-color: #333;
 }
 
 .form-submit {
@@ -96,4 +132,12 @@ h2 {
 
 .status-message.error {
   color: red;
+}
+
+.node.income {
+  fill: #ff6600;
+}
+
+.node.leftover {
+  fill: #339900;
 }

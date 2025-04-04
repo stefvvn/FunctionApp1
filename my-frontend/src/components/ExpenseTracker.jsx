@@ -8,38 +8,38 @@ const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState(null);
   const svgRef = useRef();
 
-  const handleFormSubmit = (expenseData) => {
-    setExpenses(expenseData);
+  const handleFormSubmit = (expenseData, income) => {
+    const parsedIncome = parseFloat(income);
+    if (isNaN(parsedIncome)) {
+      console.error("Invalid income value");
+      return;
+    }
+
+    const totalExpenses = expenseData.reduce(
+      (sum, expense) => sum + (parseFloat(expense.value) || 0),
+      0
+    );
+
+    const leftover = Math.max(0, parsedIncome - totalExpenses);
+
+    setExpenses({ expenseData, income: parsedIncome, leftover });
   };
 
   useEffect(() => {
     if (!expenses) return;
 
+    const { expenseData, income, leftover } = expenses;
+
     const data = [
+      ...expenseData.map((expense) => ({
+        source: "Income",
+        target: expense.label,
+        value: parseFloat(expense.value || 0),
+      })),
       {
-        source: "Bills",
-        target: "Total",
-        value: parseFloat(expenses.bill || 0),
-      },
-      {
-        source: "Rent",
-        target: "Total",
-        value: parseFloat(expenses.rent || 0),
-      },
-      {
-        source: "Food",
-        target: "Total",
-        value: parseFloat(expenses.food || 0),
-      },
-      {
-        source: "Fuel",
-        target: "Total",
-        value: parseFloat(expenses.fuel || 0),
-      },
-      {
-        source: "Other",
-        target: "Total",
-        value: parseFloat(expenses.other || 0),
+        source: "Income",
+        target: "Leftover",
+        value: leftover,
       },
     ];
 
@@ -57,8 +57,18 @@ const ExpenseTracker = () => {
       .size([width, height]);
 
     const nodes = Array.from(
-      new Set(data.map((d) => d.source).concat(data.map((d) => d.target))),
+      new Set(data.map((d) => d.source).concat(data.map((d) => d.target)))
     ).map((name) => ({ name }));
+
+    nodes.forEach((node) => {
+      if (node.name === "Income") {
+        node.x0 = 0;
+        node.x1 = 150;
+      } else {
+        node.x0 = width - 300;
+        node.x1 = width - 150;
+      }
+    });
 
     const links = data.map((d) => ({
       source: nodes.findIndex((n) => n.name === d.source),
@@ -78,19 +88,16 @@ const ExpenseTracker = () => {
         "#66b3ff",
         "#ff3399",
         "#cccccc",
+        "#ff6600",
+        "#339900",
       ]);
 
-    const linkColor = d3
-      .scaleOrdinal()
-      .domain(nodes.map((d) => d.name))
-      .range([
-        "#ffcc00",
-        "#ff6666",
-        "#66cc66",
-        "#66b3ff",
-        "#ff3399",
-        "#cccccc",
-      ]);
+    const linkColor = (sourceName, targetName) => {
+      if (targetName === "Leftover") {
+        return "#cccccc";
+      }
+      return color(targetName);
+    };
 
     svg
       .selectAll(".link")
@@ -101,7 +108,7 @@ const ExpenseTracker = () => {
       .attr("d", sankeyLinkHorizontal())
       .style("stroke-width", (d) => Math.max(1, d.width))
       .style("fill", "none")
-      .style("stroke", (d) => linkColor(d.source.name))
+      .style("stroke", (d) => linkColor(d.source.name, d.target.name))
       .style("stroke-opacity", 0.5);
 
     const node = svg
@@ -122,27 +129,40 @@ const ExpenseTracker = () => {
       .style("stroke", "#000");
 
     node
-      .filter((d) => d.name !== "Total")
       .append("text")
-      .attr("x", (d) => d.x1 + 5)
+      .attr("x", (d) => {
+        if (d.name === "Income") {
+          return d.x1 + 5;
+        }
+        return d.x0 - 5;
+      })
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", ".35em")
-      .style("text-anchor", "start")
+      .style("text-anchor", (d) => (d.name === "Income" ? "start" : "end"))
       .style("font-weight", "bold")
-      .text((d) => `${d.name} ${d.value}€`);
+      .text((d) => `${d.name} ${d.value.toFixed(0)}€`);
 
-    const totalValue = graph.links.reduce((sum, link) => sum + link.value, 0);
+    const incomeFormatted = income.toFixed(0);
+    const leftoverFormatted = leftover.toFixed(0);
 
-    const totalNode = graph.nodes.find((node) => node.name === "Total");
-
+    const incomeNode = graph.nodes.find((node) => node.name === "Income");
     svg
       .append("text")
-      .attr("x", totalNode.x1 - 30)
-      .attr("y", (totalNode.y1 + totalNode.y0) / 2)
+      .attr("x", incomeNode.x1 - 30)
+      .attr("y", (incomeNode.y1 + incomeNode.y0) / 2)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .style("font-weight", "bold")
-      .text(`Total ${totalValue.toFixed(0)}€`);
+      .text(`Income ${incomeFormatted}€`);
+
+    const leftoverNode = graph.nodes.find((node) => node.name === "Leftover");
+    svg
+      .append("text")
+      .attr("x", leftoverNode.x1 - 30)
+      .attr("y", (leftoverNode.y1 + leftoverNode.y0) / 2)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .style("font-weight", "bold");
   }, [expenses]);
 
   return (
