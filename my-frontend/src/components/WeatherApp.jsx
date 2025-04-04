@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./WeatherApp.css";
 import { WiRain, WiDaySunny, WiCloudy } from "react-icons/wi";
 import {
@@ -7,46 +7,52 @@ import {
   OPEN_CAGE_API_KEY,
 } from "../service/apiUrl.js";
 
-const HourlyForecastCard = ({
-  hour,
-  temperature,
-  apparentTemperature,
-  precipitation,
-  precipitationProbability,
-  highlight,
-}) => {
-  const getWeatherIcon = () => {
-    if (precipitation > 0 || precipitationProbability > 0)
-      return <WiRain size={32} />;
-    if (temperature < 0) return <WiCloudy size={32} color="gray" />;
-    return <WiDaySunny size={32} color="orange" />;
-  };
+const HourlyForecastCard = React.forwardRef(
+  (
+    {
+      hour,
+      temperature,
+      apparentTemperature,
+      precipitation,
+      precipitationProbability,
+      highlight,
+    },
+    ref
+  ) => {
+    const getWeatherIcon = () => {
+      if (precipitation > 0 || precipitationProbability > 0)
+        return <WiRain size={32} />;
+      if (temperature < 0) return <WiCloudy size={32} color="gray" />;
+      return <WiDaySunny size={32} color="orange" />;
+    };
 
-  const getTimeOfDayClass = () => {
-    if (hour >= 6 && hour < 12) return "morning";
-    if (hour >= 12 && hour < 18) return "afternoon";
-    if (hour >= 18 && hour < 21) return "evening";
-    return "night";
-  };
+    const getTimeOfDayClass = () => {
+      if (hour >= 6 && hour < 12) return "morning";
+      if (hour >= 12 && hour < 18) return "afternoon";
+      if (hour >= 18 && hour < 21) return "evening";
+      return "night";
+    };
 
-  return (
-    <div
-      className={`hourly-forecast-card ${getTimeOfDayClass()} ${highlight ? "highlighted" : ""}`}
-    >
-      <h4>{hour}:00</h4>
-      <div className="weather-icon">
-        {getWeatherIcon()}
-        {precipitationProbability > 0 && (
-          <span className="precipitation-probability">
-            {precipitationProbability}% chance
-          </span>
-        )}
+    return (
+      <div
+        ref={ref}
+        className={`hourly-forecast-card ${getTimeOfDayClass()} ${highlight ? "highlighted" : ""}`}
+      >
+        <h4>{hour}:00</h4>
+        <div className="weather-icon">
+          {getWeatherIcon()}
+          {precipitationProbability > 0 && (
+            <span className="precipitation-probability">
+              {precipitationProbability}%
+            </span>
+          )}
+        </div>
+        <p>Temp: {temperature}°C</p>
+        <p>Feels Like: {apparentTemperature}°C</p>
       </div>
-      <p>Temp: {temperature}°C</p>
-      <p>Feels Like: {apparentTemperature}°C</p>
-    </div>
-  );
-};
+    );
+  }
+);
 
 const WeatherApp = () => {
   const [weatherData, setWeatherData] = useState(null);
@@ -55,6 +61,9 @@ const WeatherApp = () => {
   const [city, setCity] = useState("Belgrade");
   const [inputValue, setInputValue] = useState("Belgrade");
   const [currentHourIndex, setCurrentHourIndex] = useState(0);
+
+  const scrollContainerRef = useRef(null);
+  const highlightedCardRef = useRef(null);
 
   const fetchCoordinates = async (cityName) => {
     const url = `${OPEN_CAGE_API_URL}?q=${encodeURIComponent(cityName)}&key=${OPEN_CAGE_API_KEY}`;
@@ -105,6 +114,16 @@ const WeatherApp = () => {
     fetchWeather();
   }, [city]);
 
+  useEffect(() => {
+    if (highlightedCardRef.current) {
+      highlightedCardRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center"
+      });
+    }
+  }, [weatherData, currentHourIndex]);
+
   const handleInputChange = (e) => setInputValue(e.target.value);
 
   const handleSearch = () => {
@@ -153,66 +172,68 @@ const WeatherApp = () => {
             Current weather in {city}, {getCurrentTime()}
           </h3>
 
-          <div id="hourlyForecastCarousel" className="carousel slide">
-            <div className="carousel-inner">
-              {chunkedHourlyData.map((chunk, chunkIndex) => (
-                <div
-                  key={chunkIndex}
-                  className={`carousel-item ${chunkIndex === Math.floor(currentHourIndex / 3) ? "active" : ""}`}
-                >
-                  <div className="d-flex justify-content-center">
-                    {chunk.map((time, index) => {
-                      const hour = new Date(time).getHours();
-                      const dataIndex = chunkIndex * 3 + index;
+          <div
+  className="scrollable-container"
+  ref={scrollContainerRef}
+  style={{
+    overflowX: "auto",
+    whiteSpace: "nowrap",
+    cursor: "grab",
+    userSelect: "none"
+  }}
+  onMouseDown={(e) => {
+    const scrollContainer = scrollContainerRef.current;
+    const startX = e.pageX - scrollContainer.offsetLeft;
+    const scrollLeft = scrollContainer.scrollLeft;
 
-                      const highlight =
-                        hour === new Date(weatherData.current.time).getHours();
+    const handleMouseMove = (moveEvent) => {
+      const x = moveEvent.pageX - scrollContainer.offsetLeft;
+      const scroll = scrollLeft - (x - startX);
+      scrollContainer.scrollLeft = scroll;
+    };
 
-                      return (
-                        <HourlyForecastCard
-                          key={dataIndex}
-                          hour={hour}
-                          temperature={hourlyData.temperature_2m[dataIndex]}
-                          apparentTemperature={
-                            hourlyData.apparent_temperature[dataIndex]
-                          }
-                          precipitation={hourlyData.precipitation[dataIndex]}
-                          precipitationProbability={
-                            hourlyData.precipitation_probability[dataIndex]
-                          }
-                          highlight={highlight}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target="#hourlyForecastCarousel"
-              data-bs-slide="prev"
-            >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="visually-hidden">Previous</span>
-            </button>
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target="#hourlyForecastCarousel"
-              data-bs-slide="next"
-            >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span className="visually-hidden">Next</span>
-            </button>
-          </div>
+    const handleMouseUp = () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  }}
+>
+  {chunkedHourlyData.map((chunk, chunkIndex) => (
+    <div
+      key={chunkIndex}
+      className="forecast-chunk"
+      style={{
+        display: "inline-block"
+      }}
+    >
+      <div className="d-flex justify-content-center">
+        {chunk.map((time, index) => {
+          const hour = new Date(time).getHours();
+          const dataIndex = chunkIndex * 3 + index;
+
+          const highlight =
+            hour === new Date(weatherData.current.time).getHours();
+
+          return (
+            <HourlyForecastCard
+              key={dataIndex}
+              hour={hour}
+              temperature={hourlyData.temperature_2m[dataIndex]}
+              apparentTemperature={hourlyData.apparent_temperature[dataIndex]}
+              precipitation={hourlyData.precipitation[dataIndex]}
+              precipitationProbability={hourlyData.precipitation_probability[dataIndex]}
+              highlight={highlight}
+              ref={highlight ? highlightedCardRef : null}
+            />
+          );
+        })}
+      </div>
+    </div>
+  ))}
+</div>
         </div>
       )}
     </div>
