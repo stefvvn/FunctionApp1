@@ -50,6 +50,33 @@ namespace FunctionApp1
             return new OkObjectResult("Person inserted successfully.");
         }
 
+        [Function("PersonBatchInsert")]
+        public async Task<IActionResult> RunBatchInsert([HttpTrigger(AuthorizationLevel.Function, "post", Route = "person/batch")] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a POST request for batch inserting persons.");
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var persons = JsonConvert.DeserializeObject<List<PersonData>>(requestBody);
+
+            if (persons == null || !persons.Any())
+            {
+                return new BadRequestObjectResult("Invalid person data.");
+            }
+
+            var bsonPersons = persons.Select(person => new BsonDocument
+       {
+           { "name", person.Name },
+           { "email", person.Email },
+           { "password", person.Password }
+           }).ToList();
+
+            await _collection.InsertManyAsync(bsonPersons);
+            _logger.LogInformation("Persons batch inserted successfully.");
+
+            return new OkObjectResult("Persons batch inserted successfully.");
+        }
+
+
         [Function("PersonGetList")]
         public async Task<IActionResult> RunGetAll([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
@@ -65,6 +92,61 @@ namespace FunctionApp1
 
             return new OkObjectResult(response);
         }
+
+        [Function("PersonGetById")]
+        public async Task<IActionResult> RunGetById([HttpTrigger(AuthorizationLevel.Function, "get", Route = "person/{id}")] HttpRequest req, string id)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a GET request for retrieving a person by id.");
+
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(id));
+            var person = await _collection.Find(filter).FirstOrDefaultAsync();
+
+            if (person == null)
+            {
+                return new NotFoundObjectResult($"Person with id {id} not found.");
+            }
+
+            var response = new
+            {
+                Id = person["_id"].ToString(),
+                Name = person["name"].AsString,
+                Email = person["email"].AsString
+            };
+
+            return new OkObjectResult(response);
+        }
+
+        [Function("PersonSearch")]
+        public async Task<IActionResult> RunSearch([HttpTrigger(AuthorizationLevel.Function, "get", Route = "person/search")] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a GET request for searching persons.");
+
+            string name = req.Query["name"];
+            string email = req.Query["email"];
+
+            var filter = Builders<BsonDocument>.Filter.Empty;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                filter &= Builders<BsonDocument>.Filter.Regex("name", new BsonRegularExpression(name, "i"));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                filter &= Builders<BsonDocument>.Filter.Regex("email", new BsonRegularExpression(email, "i"));
+            }
+
+            var persons = await _collection.Find(filter).ToListAsync();
+            var response = persons.Select(p => new
+            {
+                Id = p["_id"].ToString(),
+                Name = p["name"].AsString,
+                Email = p["email"].AsString
+            });
+
+            return new OkObjectResult(response);
+        }
+
 
         [Function("PersonUpdate")]
         public async Task<IActionResult> RunUpdate([HttpTrigger(AuthorizationLevel.Function, "put", Route = "person/{id}")] HttpRequest req, string id)
@@ -96,21 +178,64 @@ namespace FunctionApp1
             return new OkObjectResult("Person updated successfully.");
         }
 
-        [Function("PersonDeleteByEmail")]
-        public async Task<IActionResult> RunDeleteByEmail([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "person/{email}")] HttpRequest req, string email)
+        [Function("PersonDeleteById")]
+        public async Task<IActionResult> RunDeleteById([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "person/{id}")] HttpRequest req, string id)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a DELETE request for deleting a person by email.");
+            _logger.LogInformation("C# HTTP trigger function processed a DELETE request for deleting a person by id.");
 
-            var filter = Builders<BsonDocument>.Filter.Eq("email", email);
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(id));
             var result = await _collection.DeleteOneAsync(filter);
 
             if (result.DeletedCount == 0)
             {
-                return new NotFoundObjectResult($"Person with email {email} not found.");
+                return new NotFoundObjectResult($"Person with id {id} not found.");
             }
 
             _logger.LogInformation("Person deleted successfully.");
-            return new OkObjectResult($"Person with email {email} deleted successfully.");
+            return new OkObjectResult($"Person with id {id} deleted successfully.");
         }
+
+        [Function("PersonExportCSV")]
+        public async Task<IActionResult> RunExportCSV([HttpTrigger(AuthorizationLevel.Function, "get", Route = "person/export/csv")] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a GET request for exporting persons data in CSV format.");
+
+            var persons = await _collection.Find(new BsonDocument()).ToListAsync();
+            var csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Id,Name,Email");
+
+            foreach (var person in persons)
+            {
+                csvBuilder.AppendLine($"{person["_id"]},{person["name"]},{person["email"]}");
+            }
+
+            return new FileContentResult(Encoding.UTF8.GetBytes(csvBuilder.ToString()), "text/csv")
+            {
+                FileDownloadName = "persons.csv"
+            };
+        }
+
+        [Function("PersonExportJSON")]
+        public async Task<IActionResult> RunExportJSON([HttpTrigger(AuthorizationLevel.Function, "get", Route = "person/export/json")] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a GET request for exporting persons data in JSON format.");
+
+            var persons = await _collection.Find(new BsonDocument()).ToListAsync();
+            var response = persons.Select(p => new
+            {
+                Id = p["_id"].ToString(),
+                Name = p["name"].AsString,
+                Email = p["email"].AsString
+            });
+
+            var jsonResponse = JsonConvert.SerializeObject(response, Formatting.Indented);
+
+            return new FileContentResult(Encoding.UTF8.GetBytes(jsonResponse), "application/json")
+            {
+                FileDownloadName = "persons.json"
+            };
+        }
+
+
     }
 }
