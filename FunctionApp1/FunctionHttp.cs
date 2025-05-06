@@ -74,11 +74,11 @@ namespace FunctionApp1
             }
 
             var bsonPersons = persons.Select(person => new BsonDocument
-       {
-           { "name", person.Name },
-           { "email", person.Email },
-           { "password", person.Password }
-           }).ToList();
+            {
+            { "name", person.Name },
+            { "email", person.Email },
+            { "password", person.Password }
+            }).ToList();
 
             await _collection.InsertManyAsync(bsonPersons);
             _logger.LogInformation("Persons batch inserted successfully.");
