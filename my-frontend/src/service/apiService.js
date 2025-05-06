@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:7071/api"; // Update if your Azure Function URL is different
+const API_BASE = "http://localhost:7071/api";
 
 export async function fetchPeople() {
   const res = await fetch(`${API_BASE}/PersonGetList`);
