@@ -24,6 +24,20 @@ namespace FunctionApp1
             _collection = database.GetCollection<BsonDocument>("users");
         }
 
+        [Function("UserCount")]
+        public void RunUserCount([TimerTrigger("0 * * * * *")] TimerInfo myTimer)
+        {
+            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+
+            var count = _collection.CountDocuments(FilterDefinition<BsonDocument>.Empty);
+            _logger.LogInformation($"There are {count} users in the database.");
+
+            if (myTimer.ScheduleStatus is not null)
+            {
+                _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+            }
+        }
+
         [Function("PersonInsert")]
         public async Task<IActionResult> RunInsert([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
         {

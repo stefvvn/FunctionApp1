@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace FunctionApp1
 {
-        public class PostData
-        {
-            public string Str1 { get; set; }
-            public string Str2 { get; set; }
-        }
         public class PersonData
         {   
             public string Id { get; set; }
