@@ -24,8 +24,8 @@ namespace FunctionApp1
             _collection = database.GetCollection<BsonDocument>("users");
         }
 
-        [Function("UserCount")]
-        public void RunUserCount([TimerTrigger("0 * * * * *")] TimerInfo myTimer)
+        [Function("PeriodicUserCount")]
+        public void RunUserCount([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
