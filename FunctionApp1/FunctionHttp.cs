@@ -27,15 +27,11 @@ namespace FunctionApp1
         [Function("PeriodicUserCount")]
         public void RunUserCount([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer)
         {
-            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}. This operation runs every 5 minutes.");
 
             var count = _collection.CountDocuments(FilterDefinition<BsonDocument>.Empty);
-            _logger.LogInformation($"There are {count} users in the database.");
 
-            if (myTimer.ScheduleStatus is not null)
-            {
-                _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
-            }
+            _logger.LogInformation($"There are {count} users in the database.");
         }
 
         [Function("PersonInsert")]
