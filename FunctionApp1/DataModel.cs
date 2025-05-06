@@ -11,28 +11,11 @@ namespace FunctionApp1
             public string Str1 { get; set; }
             public string Str2 { get; set; }
         }
-
         public class PersonData
-        {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public DateTime BirthDate { get; set; }
-            public int Age
-            {
-                get
-                {
-                    var today = DateTime.Today;
-                    int age = today.Year - BirthDate.Year;
-                    if (BirthDate.Date > today.AddYears(-age))
-                    {
-                        age--;
-                    }
-                    return age;
-                }
-            }
+        {   
+            public string Id { get; set; }
+            public required string Name { get; set; }
             public required string Email { get; set; }
-            public string PhoneNumber { get; set; }
-            public string Address { get; set; }
+            public required string Password { get; set; }
         }
-}
-
+    }
